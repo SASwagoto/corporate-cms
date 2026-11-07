@@ -116,7 +116,7 @@
             is_raw_svg: $event.detail.isRawSvg,
             raw_svg: $event.detail.rawSvg,
             url: $event.detail.isRawSvg ? null : newUrl
-        });
+         });
         closeModal();
      "
      @custom-icon-deleted.window="

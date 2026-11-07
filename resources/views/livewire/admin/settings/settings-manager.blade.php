@@ -218,6 +218,53 @@
                         </div>
 
                     </div>
+
+                    <!-- FULL-SITE BACKGROUND VIDEO (Turbo Internacional Style) -->
+                    <div class="mt-6 p-5 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                                    <x-icon name="solid:video" class="w-4 h-4 text-[#013d5a] dark:text-cyan-400" />
+                                    <span>Full-Site Background Video (Turbo Internacional Architecture)</span>
+                                </h4>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                                    Plays a subtle, lightweight muted background video behind the entire website over which pages smoothly scroll.
+                                </p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" wire:model="settings.site_bg_video_enabled" value="1" class="sr-only peer" />
+                                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#013d5a] dark:peer-checked:bg-cyan-500"></div>
+                            </label>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center pt-2">
+                            <div class="md:col-span-8">
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Background Video Asset Path or URL</label>
+                                <input wire:model="settings.site_bg_video_url" type="text" placeholder="assets/videos/background-marine.mp4" 
+                                       class="w-full px-3 py-2 rounded-xl text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                            </div>
+                            <div class="md:col-span-4 flex items-end gap-2">
+                                <button type="button" 
+                                    @click="$dispatch('open-media-picker', { targetField: 'site_bg_video_url' })"
+                                    class="w-full px-3 py-2 rounded-xl text-xs font-bold bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 transition-all flex items-center justify-center gap-2">
+                                    <x-icon name="solid:film" class="w-3.5 h-3.5" />
+                                    <span>Select from Media</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Video Opacity Controller -->
+                        <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800/80">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                    Video Visibility Opacity: <span class="font-mono font-bold text-[#013d5a] dark:text-cyan-400">{{ $settings['site_bg_video_opacity'] ?? 85 }}%</span>
+                                </label>
+                                <span class="text-[11px] text-slate-400">Controls clarity through transparent sections</span>
+                            </div>
+                            <input type="range" min="10" max="100" step="5" wire:model.live="settings.site_bg_video_opacity" 
+                                   class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-[#013d5a] dark:accent-cyan-400">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- TAB 3: STORAGE ENGINE -->

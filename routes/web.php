@@ -18,6 +18,22 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+
+Route::get('/services', function () {
+    return view('pages.services');
+})->name('services');
+
+Route::get('/projects', function () {
+    return view('pages.projects');
+})->name('projects');
+
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');
+
 /*
 |--------------------------------------------------------------------------
 | Authentication Fallback & Direct Logout

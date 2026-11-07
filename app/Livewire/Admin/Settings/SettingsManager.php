@@ -61,6 +61,9 @@ class SettingsManager extends Component
             'default_timezone'     => 'Asia/Dhaka',
             'date_format'          => 'd M, Y',
             'time_format'          => 'h:i A',
+            'site_bg_video_enabled'=> '1',
+            'site_bg_video_url'    => 'assets/videos/background-marine.mp4',
+            'site_bg_video_opacity'=> '85',
             'custom_head_scripts'  => '',
             'custom_footer_scripts'=> '',
         ];
