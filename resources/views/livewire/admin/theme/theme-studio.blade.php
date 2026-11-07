@@ -1,9 +1,8 @@
 <div>
     <x-slot:header>Theme Studio</x-slot:header>
 
-    <!-- Dynamic Web Fonts Loader: Ensures every font family renders instantly in the preview -->
-    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
-    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800,900|inter:400,500,600,700,800,900|outfit:400,500,600,700,800,900|montserrat:400,500,600,700,800,900|space-grotesk:400,500,600,700|syne:500,600,700,800|roboto:400,500,700,900|dm-sans:400,500,700,800&display=swap" />
+    <!-- 100% Self-Hosted Local Fonts (Zero CDN Dependency) -->
+    <link rel="stylesheet" href="{{ asset('assets/fonts/fonts.css') }}">
 
     <!-- Top Action Bar -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -194,8 +193,10 @@
                                 <option value="Montserrat">Montserrat (Prestige Corporate)</option>
                                 <option value="Space Grotesk">Space Grotesk (High-Tech Architectural)</option>
                                 <option value="Syne">Syne (Heavy Impact Editorial)</option>
-                                <option value="Roboto">Roboto (Clean Universal)</option>
                                 <option value="DM Sans">DM Sans (Humanist Corporate)</option>
+                                <option value="Manrope">Manrope (Semi-Geometric Clean)</option>
+                                <option value="Poppins">Poppins (Geometric Display)</option>
+                                <option value="Roboto">Roboto (Clean Universal)</option>
                             </select>
                         </div>
 
@@ -205,8 +206,10 @@
                                 <option value="Plus Jakarta Sans">Plus Jakarta Sans</option>
                                 <option value="Inter">Inter (Best for dense data & tables)</option>
                                 <option value="Outfit">Outfit</option>
-                                <option value="Roboto">Roboto</option>
                                 <option value="DM Sans">DM Sans</option>
+                                <option value="Manrope">Manrope</option>
+                                <option value="Poppins">Poppins</option>
+                                <option value="Roboto">Roboto</option>
                                 <option value="system-ui">System Default (Native UI)</option>
                             </select>
                         </div>

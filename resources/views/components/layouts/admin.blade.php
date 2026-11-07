@@ -10,10 +10,8 @@
     <!-- Dynamic Favicon -->
     <link rel="icon" type="image/png" href="{{ asset(\App\Models\Setting::get('site_icon', 'assets/images/icon.png')) }}">
 
-    <!-- Google Fonts (Non-render-blocking for instant first paint) -->
-    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
-    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&display=swap" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&display=swap"></noscript>
+    <!-- 100% Self-Hosted Webfonts (Zero Latency & 100% Offline Compatible) -->
+    <link rel="stylesheet" href="{{ asset('assets/fonts/fonts.css') }}">
 
     <!-- Anti-FOUC Theme Script -->
     <script>
