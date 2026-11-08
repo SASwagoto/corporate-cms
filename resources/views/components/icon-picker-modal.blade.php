@@ -6,8 +6,9 @@
         targetField: null,
         targetTypeField: null,
         targetIndex: null,
-        limit: 48,
+        limit: 72,
         isLoadingIcons: false,
+        iconsVersion: 0,
 
         customFileSelected: false,
         customPreviewUrl: null,
@@ -17,16 +18,67 @@
         faIcons: [],
         customIcons: {{ Js::from(\App\Services\IconRegistry::getCustomIcons()) }},
 
+        init() {
+            this.preloadIcons();
+        },
+
+        async preloadIcons() {
+            if (this.faIcons && this.faIcons.length > 0) return;
+
+            if (window._cachedNordroyIcons && window._cachedNordroyIcons.length > 0) {
+                this.faIcons = window._cachedNordroyIcons;
+                this.iconsVersion++;
+                return;
+            }
+
+            const localCached = localStorage.getItem('nordroy_fa_manifest_v2');
+            if (localCached) {
+                try {
+                    const parsed = JSON.parse(localCached);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        this.faIcons = parsed;
+                        window._cachedNordroyIcons = parsed;
+                        this.iconsVersion++;
+                        return;
+                    }
+                } catch(e) {}
+            }
+
+            this.isLoadingIcons = true;
+            try {
+                const res = await fetch('{{ route('admin.icons.manifest') }}');
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                this.faIcons = Array.isArray(data) ? data : [];
+                window._cachedNordroyIcons = this.faIcons;
+                this.iconsVersion++;
+                try {
+                    localStorage.setItem('nordroy_fa_manifest_v2', JSON.stringify(this.faIcons));
+                } catch(e) {}
+            } catch (e) {
+                console.error('Icons manifest fetch failed:', e);
+                this.faIcons = [];
+            } finally {
+                this.isLoadingIcons = false;
+            }
+        },
+
         get filteredFaIcons() {
-            let list = this.faIcons;
+            this.iconsVersion;
+            let list = this.faIcons || [];
             if (this.selectedCategory !== 'all') {
                 list = list.filter(i => i.cat === this.selectedCategory);
             }
-            if (this.searchQuery.trim() !== '') {
+            if (this.searchQuery && this.searchQuery.trim() !== '') {
                 const q = this.searchQuery.toLowerCase().trim();
-                list = list.filter(i => i.name.toLowerCase().includes(q) || i.title.toLowerCase().includes(q));
+                list = list.filter(i => (i.name && i.name.toLowerCase().includes(q)) || (i.title && i.title.toLowerCase().includes(q)));
             }
             return list;
+        },
+
+        get displayedIcons() {
+            this.iconsVersion;
+            return this.filteredFaIcons.slice(0, this.limit);
         },
 
         get sanitizedSvgPreview() {
@@ -79,44 +131,19 @@
             this.searchQuery = '';
             this.selectedCategory = 'all';
             this.activeTab = 'library';
-            this.limit = 48;
+            this.limit = 72;
             this.customFileSelected = false;
             this.customPreviewUrl = null;
             this.rawSvgInput = '';
-            this.isOpen = true;
 
-            // Zero-Bloat Async Fetch with LocalStorage caching
+            // Ensure icons are loaded before displaying
             if (this.faIcons.length === 0) {
-                if (window._cachedNordroyIcons && window._cachedNordroyIcons.length > 0) {
-                    this.faIcons = window._cachedNordroyIcons;
-                } else {
-                    const localCached = localStorage.getItem('nordroy_fa_manifest_v2');
-                    if (localCached) {
-                        try {
-                            this.faIcons = JSON.parse(localCached);
-                            window._cachedNordroyIcons = this.faIcons;
-                        } catch(e) {}
-                    }
-                }
-
-                if (this.faIcons.length === 0) {
-                    this.isLoadingIcons = true;
-                    try {
-                        const res = await fetch('{{ route('admin.icons.manifest') }}');
-                        if (!res.ok) throw new Error('HTTP ' + res.status);
-                        this.faIcons = await res.json();
-                        window._cachedNordroyIcons = this.faIcons;
-                        try {
-                            localStorage.setItem('nordroy_fa_manifest_v2', JSON.stringify(this.faIcons));
-                        } catch(e) {}
-                    } catch (e) {
-                        console.error('Icons manifest fetch failed:', e);
-                        this.faIcons = [];
-                    } finally {
-                        this.isLoadingIcons = false;
-                    }
-                }
+                await this.preloadIcons();
             }
+
+            this.isOpen = true;
+            this.$nextTick(() => { this.$refs.searchInput?.focus(); });
+        },
 
             this.$nextTick(() => { this.$refs.searchInput?.focus(); });
         },
@@ -230,28 +257,29 @@
                     <div class="relative w-full sm:w-80">
                         <input x-ref="searchInput"
                                x-model="searchQuery"
+                               @input="limit = 72"
                                type="text" 
                                placeholder="Search icons (e.g. linkedin, ship, gear)..." 
                                class="w-full px-3 py-1.5 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#003C58] dark:focus:ring-cyan-500" />
                     </div>
 
                     <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
-                        <button type="button" @click="selectedCategory = 'all'"
+                        <button type="button" @click="selectedCategory = 'all'; limit = 72"
                             :class="selectedCategory === 'all' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             All
                         </button>
-                        <button type="button" @click="selectedCategory = 'brands'"
+                        <button type="button" @click="selectedCategory = 'brands'; limit = 72"
                             :class="selectedCategory === 'brands' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             Brands
                         </button>
-                        <button type="button" @click="selectedCategory = 'solid'"
+                        <button type="button" @click="selectedCategory = 'solid'; limit = 72"
                             :class="selectedCategory === 'solid' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             Solid
                         </button>
-                        <button type="button" @click="selectedCategory = 'regular'"
+                        <button type="button" @click="selectedCategory = 'regular'; limit = 72"
                             :class="selectedCategory === 'regular' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             Regular
@@ -271,7 +299,7 @@
                 <!-- Visual Grid -->
                 <div x-show="!isLoadingIcons" class="flex-1 overflow-y-auto p-5 max-h-[50vh]">
                     <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2.5">
-                        <template x-for="icon in filteredFaIcons.slice(0, limit)" :key="icon.id">
+                        <template x-for="icon in displayedIcons" :key="icon.id">
                             <button type="button"
                                     @click="selectIcon(icon.id)"
                                     class="flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 hover:border-[#003C58] dark:hover:border-cyan-400 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all group cursor-pointer shadow-2xs">
@@ -286,8 +314,8 @@
                     </div>
 
                     <div x-show="filteredFaIcons.length > limit" class="mt-6 text-center">
-                        <button type="button" @click="limit += 48"
-                            class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer">
+                        <button type="button" @click="limit += 72"
+                            class="px-5 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer">
                             Load More (<span x-text="filteredFaIcons.length - limit"></span> remaining)
                         </button>
                     </div>
