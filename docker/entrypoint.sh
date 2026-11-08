@@ -17,7 +17,11 @@ if [ ! -f /var/www/html/.env ]; then
     fi
 fi
 
-# Ensure APP_KEY is set
+# Ensure PHP-FPM does NOT clear environment variables
+echo "Configuring PHP-FPM to retain environment variables (clear_env = no)..."
+echo "clear_env = no" >> /usr/local/etc/php-fpm.d/zz-docker.conf 2>/dev/null || true
+
+# Robust APP_KEY Resolution
 if [ -n "$APP_KEY" ]; then
     echo "Using APP_KEY provided via environment variable..."
     if grep -q "^APP_KEY=" /var/www/html/.env; then
@@ -26,14 +30,20 @@ if [ -n "$APP_KEY" ]; then
         echo "APP_KEY=${APP_KEY}" >> /var/www/html/.env
     fi
 else
-    echo "No APP_KEY environment variable detected. Generating fresh Application Key..."
-    php artisan key:generate --force
+    EXISTING_KEY=$(grep -E "^APP_KEY=" /var/www/html/.env 2>/dev/null | cut -d '=' -f2-)
+    if [ -z "$EXISTING_KEY" ] || [ "$EXISTING_KEY" = "" ]; then
+        echo "Generating fresh Application Key..."
+        php artisan key:generate --force
+        EXISTING_KEY=$(grep -E "^APP_KEY=" /var/www/html/.env | cut -d '=' -f2-)
+    fi
+    export APP_KEY="$EXISTING_KEY"
+    echo "Resolved Application Key for runtime."
 fi
 
 # Ensure storage symlink exists
 php artisan storage:link --quiet || true
 
-# Clear and cache configurations for production
+# Clear previous cache and re-cache with verified APP_KEY
 echo "Caching Laravel configuration, routes, and views..."
 php artisan config:clear
 php artisan config:cache
