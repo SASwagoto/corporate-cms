@@ -7,8 +7,14 @@
 
     <title>{{ \App\Models\Setting::get('site_name', 'Nordroy CMS') }} - Authentication</title>
 
-    <!-- Dynamic Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset(\App\Models\Setting::get('site_icon', 'assets/images/icon.png')) }}">
+    <!-- Dynamic Favicon (Adaptive Light & Dark Mode) -->
+    @php
+        $siteIconLight = \App\Models\Setting::get('site_icon', 'assets/images/icon.png');
+        $siteIconDark = \App\Models\Setting::get('site_icon_dark', 'assets/images/icon-dark.png') ?: $siteIconLight;
+    @endphp
+    <link rel="icon" type="image/png" href="{{ asset($siteIconLight) }}" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="{{ asset($siteIconDark) }}" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" href="{{ asset($siteIconLight) }}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

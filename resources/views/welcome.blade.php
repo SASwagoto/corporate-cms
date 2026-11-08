@@ -95,18 +95,25 @@
                             </div>
                             
                             <!-- Middle Rotating Indicator Ring -->
-                            <div class="absolute inset-4 rounded-full border border-dashed border-[#003C58]/35 dark:border-cyan-400/30 animate-turbine"></div>
+                            <div class="absolute inset-4 rounded-full border border-dashed border-[#003C58]/35 dark:border-slate-700 animate-turbine"></div>
                             
                             <!-- Inner Recessed Instrument Center (Light Mode: Clean Titanium Silver, Dark Mode: Deep Shipyard Carbon) -->
                             <div class="relative z-10 w-52 h-52 sm:w-60 sm:h-60 rounded-full bg-slate-50 dark:bg-[#030c14] border-4 border-slate-200 dark:border-slate-800 shadow-inner flex items-center justify-center overflow-hidden">
                                 
                                 <!-- Subtle Radial Grid Inside Dial -->
-                                <div class="absolute inset-0 opacity-20 dark:opacity-15 bg-[radial-gradient(#003C58_1px,transparent_1px)] dark:bg-[radial-gradient(#0ea5e9_1px,transparent_1px)] [background-size:12px_12px]"></div>
+                                <div class="absolute inset-0 opacity-20 dark:opacity-10 bg-[radial-gradient(#003C58_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:12px_12px]"></div>
                                 
-                                <!-- The Spinning Turbine (Clear, Distinct, Perfectly Contrast in both modes) -->
-                                <img src="{{ asset('assets/images/icon.png') }}" 
+                                <!-- The Spinning Turbine (Clear, Distinct, Dual Mode with zero artificial cyan glow) -->
+                                @php
+                                    $heroTurbineLight = \App\Models\Setting::get('site_icon', 'assets/images/icon.png');
+                                    $heroTurbineDark = \App\Models\Setting::get('site_icon_dark', 'assets/images/icon-dark.png') ?: $heroTurbineLight;
+                                @endphp
+                                <img src="{{ asset($heroTurbineLight) }}" 
                                      alt="Nordroy Precision Marine Turbine" 
-                                     class="w-36 h-36 sm:w-40 sm:h-40 object-contain animate-turbine drop-shadow-[0_4px_16px_rgba(0,60,88,0.22)] dark:drop-shadow-[0_0_20px_rgba(14,165,233,0.5)] relative z-20" />
+                                     class="w-36 h-36 sm:w-40 sm:h-40 object-contain animate-turbine drop-shadow-[0_4px_16px_rgba(0,60,88,0.22)] dark:hidden relative z-20" />
+                                <img src="{{ asset($heroTurbineDark) }}" 
+                                     alt="Nordroy Precision Marine Turbine" 
+                                     class="w-36 h-36 sm:w-40 sm:h-40 object-contain animate-turbine drop-shadow-[0_6px_20px_rgba(0,0,0,0.6)] hidden dark:block relative z-20" />
                             </div>
                         </div>
 

@@ -58,8 +58,14 @@
     <meta name="twitter:image" content="{{ $ogImageUrl }}">
     <meta name="twitter:image:alt" content="{{ $siteName }}">
 
-    <!-- Dynamic Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset(\App\Models\Setting::get('site_icon', 'assets/images/icon.png')) }}">
+    <!-- Dynamic Favicon (Adaptive Light & Dark Mode) -->
+    @php
+        $siteIconLight = \App\Models\Setting::get('site_icon', 'assets/images/icon.png');
+        $siteIconDark = \App\Models\Setting::get('site_icon_dark', 'assets/images/icon-dark.png') ?: $siteIconLight;
+    @endphp
+    <link rel="icon" type="image/png" href="{{ asset($siteIconLight) }}" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="{{ asset($siteIconDark) }}" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" href="{{ asset($siteIconLight) }}">
 
     <!-- 100% Self-Hosted Local Webfonts (Zero Latency & 100% Offline Compatible) -->
     <link rel="stylesheet" href="{{ asset('assets/fonts/fonts.css') }}">
@@ -171,10 +177,10 @@
         }
 
         .icon-glow {
-            filter: drop-shadow(0 0 16px rgba(1, 61, 90, 0.35));
+            filter: drop-shadow(0 4px 12px rgba(1, 61, 90, 0.25));
         }
         .dark .icon-glow {
-            filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.4));
+            filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6));
         }
 
         @keyframes progress {
@@ -246,9 +252,12 @@
          class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white dark:bg-[#07131e] select-none transition-opacity duration-300">
         <div class="flex flex-col items-center">
             <div class="relative w-16 h-16 flex items-center justify-center mb-6">
-                <img src="{{ asset('assets/images/icon.png') }}" 
+                <img src="{{ asset($siteIconLight) }}" 
                      alt="Nordroy Turbine" 
-                     class="w-14 h-14 object-contain animate-turbine icon-glow" />
+                     class="w-14 h-14 object-contain animate-turbine drop-shadow-[0_4px_10px_rgba(0,60,88,0.15)] dark:hidden" />
+                <img src="{{ asset($siteIconDark) }}" 
+                     alt="Nordroy Turbine" 
+                     class="w-14 h-14 object-contain animate-turbine drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] hidden dark:block" />
             </div>
             <div class="w-36 h-[2px] bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden relative shadow-inner">
                 <div class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-[#003C58] to-[#0ea5e9] dark:via-cyan-400 dark:to-teal-300 rounded-full animate-[progress_1.2s_ease-in-out_infinite]"></div>

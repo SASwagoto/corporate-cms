@@ -148,7 +148,7 @@
                         <p class="text-[11px] text-slate-400 mt-0.5">Manage your official logos and favicon with standardized dimensions.</p>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
                         
                         <!-- 1. Corporate Light Mode Logo -->
                         <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
@@ -222,22 +222,22 @@
                             </div>
                         </div>
 
-                        <!-- 3. Favicon / Turbine Icon -->
+                        <!-- 3. Light Favicon / Turbine Icon -->
                         <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
                             <div>
                                 <div class="flex items-center justify-between gap-2 mb-1">
-                                    <span class="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">Browser Favicon</span>
+                                    <span class="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">Light Favicon / Turbine</span>
                                     <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                                         64 × 64 px
                                     </span>
                                 </div>
-                                <p class="text-[11px] text-slate-400 mb-4">Recommended: Square SVG, PNG, or ICO (1:1 ratio).</p>
+                                <p class="text-[11px] text-slate-400 mb-4">Visible in browser tabs & light hero instrument dial.</p>
                                 
-                                <!-- Realistic Favicon Scale Container -->
-                                <div class="h-20 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center justify-center mb-4 overflow-hidden shadow-2xs">
-                                    <div class="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 flex items-center justify-center p-2">
+                                <!-- Realistic Favicon Scale Container (Light) -->
+                                <div class="h-20 rounded-xl bg-white border border-slate-200 flex items-center justify-center mb-4 overflow-hidden shadow-2xs">
+                                    <div class="w-12 h-12 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center p-2">
                                         <img src="{{ asset($settings['site_icon'] ?? 'assets/images/icon.png') }}" 
-                                             alt="Favicon" 
+                                             alt="Light Favicon" 
                                              class="w-8 h-8 object-contain" />
                                     </div>
                                 </div>
@@ -253,7 +253,45 @@
 
                                 <button type="button" 
                                     wire:click="removeSettingAsset('site_icon', 'assets/images/icon.png')"
-                                    title="Reset to default icon"
+                                    title="Reset to default light icon"
+                                    class="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer border border-slate-200 dark:border-slate-800">
+                                    <x-icon name="solid:rotate-left" class="w-3.5 h-3.5" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 4. Dark Favicon / Turbine Icon -->
+                        <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between gap-2 mb-1">
+                                    <span class="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">Dark Favicon / Turbine</span>
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
+                                        64 × 64 px
+                                    </span>
+                                </div>
+                                <p class="text-[11px] text-slate-400 mb-4">Visible on dark tabs & dark hero instrument dial.</p>
+                                
+                                <!-- Realistic Favicon Scale Container (Dark) -->
+                                <div class="h-20 rounded-xl bg-[#07131e] border border-slate-800 flex items-center justify-center mb-4 overflow-hidden shadow-2xs">
+                                    <div class="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-2">
+                                        <img src="{{ asset(!empty($settings['site_icon_dark']) ? $settings['site_icon_dark'] : ($settings['site_icon'] ?? 'assets/images/icon-dark.png')) }}" 
+                                             alt="Dark Favicon" 
+                                             class="w-8 h-8 object-contain" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 pt-3 border-t border-slate-200/60 dark:border-slate-800">
+                                <button type="button" 
+                                    @click="$dispatch('open-media-picker', { targetField: 'site_icon_dark' })"
+                                    class="flex-1 px-3 py-2 rounded-xl text-xs font-bold bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                                    <x-icon name="solid:images" class="w-3.5 h-3.5" />
+                                    <span>Change</span>
+                                </button>
+
+                                <button type="button" 
+                                    wire:click="removeSettingAsset('site_icon_dark', 'assets/images/icon-dark.png')"
+                                    title="Reset to default dark icon"
                                     class="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer border border-slate-200 dark:border-slate-800">
                                     <x-icon name="solid:rotate-left" class="w-3.5 h-3.5" />
                                 </button>

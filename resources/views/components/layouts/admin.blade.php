@@ -7,8 +7,14 @@
 
     <title>{{ $title ?? 'Dashboard' }} | {{ \App\Models\Setting::get('site_name', 'Nordroy CMS') }}</title>
 
-    <!-- Dynamic Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset(\App\Models\Setting::get('site_icon', 'assets/images/icon.png')) }}">
+    <!-- Dynamic Favicon (Adaptive Light & Dark Mode) -->
+    @php
+        $siteIconLight = \App\Models\Setting::get('site_icon', 'assets/images/icon.png');
+        $siteIconDark = \App\Models\Setting::get('site_icon_dark', 'assets/images/icon-dark.png') ?: $siteIconLight;
+    @endphp
+    <link rel="icon" type="image/png" href="{{ asset($siteIconLight) }}" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/png" href="{{ asset($siteIconDark) }}" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" href="{{ asset($siteIconLight) }}">
 
     <!-- 100% Self-Hosted Webfonts (Zero Latency & 100% Offline Compatible) -->
     <link rel="stylesheet" href="{{ asset('assets/fonts/fonts.css') }}">
@@ -31,10 +37,10 @@
             animation: turbine-spin 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
         .icon-glow {
-            filter: drop-shadow(0 0 16px rgba(1, 61, 90, 0.45));
+            filter: drop-shadow(0 4px 12px rgba(1, 61, 90, 0.25));
         }
         .dark .icon-glow {
-            filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.45));
+            filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6));
         }
         /* Hide scrollbars for clean horizontal tab navigation */
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -69,6 +75,8 @@
     @php
         $siteLogoLight = \App\Models\Setting::get('site_logo', 'assets/images/logo.png');
         $siteLogoDark = \App\Models\Setting::get('site_logo_dark') ?: $siteLogoLight;
+        $siteIconLight = \App\Models\Setting::get('site_icon', 'assets/images/icon.png');
+        $siteIconDark = \App\Models\Setting::get('site_icon_dark', 'assets/images/icon-dark.png') ?: $siteIconLight;
     @endphp
 
     <!-- ==================== NORDROY PRELOADER ==================== -->
@@ -84,9 +92,12 @@
         
         <div class="flex flex-col items-center">
             <div class="relative w-16 h-16 flex items-center justify-center mb-6">
-                <img src="{{ asset('assets/images/icon.png') }}" 
+                <img src="{{ asset($siteIconLight) }}" 
                      alt="Nordroy Turbine" 
-                     class="w-14 h-14 object-contain animate-turbine icon-glow" />
+                     class="w-14 h-14 object-contain animate-turbine drop-shadow-[0_4px_10px_rgba(0,60,88,0.15)] dark:hidden" />
+                <img src="{{ asset($siteIconDark) }}" 
+                     alt="Nordroy Turbine" 
+                     class="w-14 h-14 object-contain animate-turbine drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] hidden dark:block" />
             </div>
             <div class="w-36 h-[2px] bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden relative shadow-inner">
                 <div class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-[#003C58] to-cyan-500 dark:via-cyan-400 dark:to-teal-300 rounded-full animate-[progress_1.2s_ease-in-out_infinite]"></div>
@@ -132,7 +143,8 @@
             <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between shrink-0">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="w-9 h-9 rounded-full bg-[#003C58]/10 dark:bg-[#003C58]/30 border border-[#003C58]/20 flex items-center justify-center shrink-0">
-                        <img src="{{ asset(\App\Models\Setting::get('site_icon', 'assets/images/icon.png')) }}" alt="Icon" class="w-5 h-5 object-contain" />
+                        <img src="{{ asset($siteIconLight) }}" alt="Icon" class="w-5 h-5 object-contain dark:hidden" />
+                        <img src="{{ asset($siteIconDark) }}" alt="Icon" class="w-5 h-5 object-contain hidden dark:block" />
                     </div>
                     <div class="truncate">
                         <p class="text-xs font-semibold text-slate-800 dark:text-white truncate">{{ auth()->user()->name }}</p>
@@ -173,7 +185,8 @@
             <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between">
                 <div class="flex items-center gap-3 min-w-0">
                     <div class="w-9 h-9 rounded-full bg-[#003C58]/10 dark:bg-[#003C58]/30 border border-[#003C58]/20 flex items-center justify-center shrink-0">
-                        <img src="{{ asset(\App\Models\Setting::get('site_icon', 'assets/images/icon.png')) }}" alt="Icon" class="w-5 h-5 object-contain" />
+                        <img src="{{ asset($siteIconLight) }}" alt="Icon" class="w-5 h-5 object-contain dark:hidden" />
+                        <img src="{{ asset($siteIconDark) }}" alt="Icon" class="w-5 h-5 object-contain hidden dark:block" />
                     </div>
                     <div class="truncate">
                         <p class="text-xs font-semibold text-slate-800 dark:text-white truncate">{{ auth()->user()->name }}</p>

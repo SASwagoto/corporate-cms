@@ -16,6 +16,7 @@ class SettingSeeder extends Seeder
             ['group' => 'general', 'key' => 'site_logo', 'value' => 'assets/images/logo.png', 'type' => 'text'],
             ['group' => 'general', 'key' => 'site_logo_dark', 'value' => 'assets/images/logo-dark.png', 'type' => 'text'],
             ['group' => 'general', 'key' => 'site_icon', 'value' => 'assets/images/icon.png', 'type' => 'text'],
+            ['group' => 'general', 'key' => 'site_icon_dark', 'value' => 'assets/images/icon-dark.png', 'type' => 'text'],
             
             // Login & Portal Info
             ['group' => 'auth', 'key' => 'auth_headline', 'value' => 'Marine & Power Engineering Platform', 'type' => 'text'],
