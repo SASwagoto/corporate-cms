@@ -42,4 +42,31 @@ class Service extends Model
     {
         return $this->morphOne(SeoMeta::class, 'seoble');
     }
+
+    public function getDisplayTitleAttribute(): string
+    {
+        $val = $this->getTranslation('title');
+        if (is_array($val)) {
+            return $val['en'] ?? reset($val) ?? '';
+        }
+        return (string) ($val ?? '');
+    }
+
+    public function getDisplaySummaryAttribute(): string
+    {
+        $val = $this->getTranslation('short_summary');
+        if (is_array($val)) {
+            return $val['en'] ?? reset($val) ?? '';
+        }
+        return (string) ($val ?? '');
+    }
+
+    public function getDisplayContentAttribute(): string
+    {
+        $val = $this->getTranslation('content');
+        if (is_array($val)) {
+            return $val['en'] ?? reset($val) ?? '';
+        }
+        return (string) ($val ?? '');
+    }
 }

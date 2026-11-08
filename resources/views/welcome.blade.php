@@ -353,79 +353,43 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <!-- Service 1 -->
-                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-[#003C58] dark:hover:border-cyan-500/50 transition-all space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-bold text-[#003C58] dark:text-cyan-400">01 / BALANCING</span>
-                        <x-icon name="solid:gauge" class="w-5 h-5 text-slate-400" />
-                    </div>
-                    <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">Dynamic Rotor Balancing (100k RPM)</h3>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Elimination of micro-vibrations with computerized dynamic balancing up to 100,000 RPM, certified with comprehensive tolerance test sheets.
-                    </p>
-                </div>
+                @php
+                    $activeServices = \App\Models\Service::where('is_active', true)
+                        ->orderBy('order', 'asc')
+                        ->get();
+                @endphp
 
-                <!-- Service 2 -->
-                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-[#003C58] dark:hover:border-cyan-500/50 transition-all space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-bold text-[#003C58] dark:text-cyan-400">02 / WELDING</span>
-                        <x-icon name="solid:fire-flame-curved" class="w-5 h-5 text-slate-400" />
+                @forelse ($activeServices as $index => $service)
+                    <!-- Dynamic Service {{ $index + 1 }} -->
+                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-[#003C58] dark:hover:border-cyan-500/50 transition-all space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono font-bold text-[#003C58] dark:text-cyan-400">
+                                {{ sprintf('%02d', $index + 1) }} / {{ strtoupper(explode('-', $service->slug)[0] ?? 'SERVICE') }}
+                            </span>
+                            <div class="w-5 h-5 flex items-center justify-center text-slate-400">
+                                <x-icon :name="$service->icon ?: 'solid:gauge'" class="w-5 h-5 text-slate-400" />
+                            </div>
+                        </div>
+                        <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">
+                            {{ $service->display_title }}
+                        </h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            {{ $service->display_summary }}
+                        </p>
                     </div>
-                    <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">Turbine Blading &amp; TIG Welding</h3>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Precision laser and micro-TIG rebuilding of eroded turbine blade profiles, shroud rings, and metallurgical crack restoration.
-                    </p>
-                </div>
-
-                <!-- Service 3 -->
-                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-[#003C58] dark:hover:border-cyan-500/50 transition-all space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-bold text-[#003C58] dark:text-cyan-400">03 / CHRA</span>
-                        <x-icon name="solid:arrows-rotate" class="w-5 h-5 text-slate-400" />
+                @empty
+                    <!-- Fallback if database empty -->
+                    <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-[#003C58] dark:hover:border-cyan-500/50 transition-all space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-mono font-bold text-[#003C58] dark:text-cyan-400">01 / BALANCING</span>
+                            <x-icon name="solid:gauge" class="w-5 h-5 text-slate-400" />
+                        </div>
+                        <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">Dynamic Rotor Balancing (100k RPM)</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                            Elimination of micro-vibrations with computerized dynamic balancing up to 100,000 RPM, certified with comprehensive tolerance test sheets.
+                        </p>
                     </div>
-                    <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">Cartridge (CHRA) Exchange</h3>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Pre-assembled, factory-balanced cartridge replacement modules for rapid turnaround times during tight vessel port calls.
-                    </p>
-                </div>
-
-                <!-- Service 4 -->
-                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-[#003C58] dark:hover:border-cyan-500/50 transition-all space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-bold text-[#003C58] dark:text-cyan-400">04 / CHEMICAL</span>
-                        <x-icon name="solid:spray-can" class="w-5 h-5 text-slate-400" />
-                    </div>
-                    <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">Ultrasonic Chemical De-Carbonization</h3>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Multi-stage heated ultrasonic bath cleaning to remove stubborn heavy fuel oil carbon glaze without damaging parent metal tolerances.
-                    </p>
-                </div>
-
-                <!-- Service 5 -->
-                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-[#003C58] dark:hover:border-cyan-500/50 transition-all space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-bold text-[#003C58] dark:text-cyan-400">05 / FLYING SQUAD</span>
-                        <x-icon name="solid:truck-fast" class="w-5 h-5 text-slate-400" />
-                    </div>
-                    <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">24/7 Port Emergency Flying Squads</h3>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Marine engineers equipped with mobile inspection tools ready to board vessels at Chattogram, Mongla, or international outer anchorages.
-                    </p>
-                </div>
-
-                <!-- Service 6 -->
-                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 shadow-sm hover:border-[#003C58] dark:hover:border-cyan-500/50 transition-all space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-mono font-bold text-[#003C58] dark:text-cyan-400">06 / RETROFIT</span>
-                        <x-icon name="solid:wrench" class="w-5 h-5 text-slate-400" />
-                    </div>
-                    <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">Retrofit &amp; Modernization Upgrades</h3>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Replacement of outdated, obsolete turbochargers with modern, high-efficiency models for reduced fuel consumption and lower IMO emissions.
-                    </p>
-                </div>
-
+                @endforelse
             </div>
 
         </div>

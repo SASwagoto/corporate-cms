@@ -3,6 +3,7 @@
 use App\Livewire\Admin\Access\AccessManager;
 use App\Livewire\Admin\Enquiries\EnquiryManager;
 use App\Livewire\Admin\Media\MediaManager;
+use App\Livewire\Admin\Services\ServiceManager;
 use App\Livewire\Admin\Settings\SettingsManager;
 use App\Livewire\Admin\Theme\ThemeStudio;
 use App\Services\IconRegistry;
@@ -229,6 +230,11 @@ Route::middleware([
     Route::get('/media', MediaManager::class)
         ->middleware('permission:media.view')
         ->name('media');
+
+    // Marine Services & Precision Overhauls
+    Route::get('/services', ServiceManager::class)
+        ->middleware('permission:services.view')
+        ->name('services');
 
     // Ultra-Fast Cached JSON Endpoint for Icon Picker (Zero Page Bloat)
     Route::get('/api/icons-manifest', function () {
