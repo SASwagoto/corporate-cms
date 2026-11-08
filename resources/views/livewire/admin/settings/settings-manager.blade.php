@@ -79,6 +79,13 @@
                     <span>Social Presence</span>
                 </button>
 
+                <button type="button" @click="currentTab = 'seo'"
+                    :class="currentTab === 'seo' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                    class="shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left whitespace-nowrap cursor-pointer">
+                    <x-icon name="solid:globe" class="w-4 h-4 shrink-0" />
+                    <span>SEO & Link Preview</span>
+                </button>
+
                 <button type="button" @click="currentTab = 'scripts'"
                     :class="currentTab === 'scripts' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
                     class="shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left whitespace-nowrap cursor-pointer">
@@ -360,6 +367,152 @@
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Custom Footer Scripts (Before &lt;/body&gt;)</label>
                         <textarea wire:model="settings.custom_footer_scripts" rows="4" placeholder="<!-- Live Chat, Tracking widgets, etc. -->" class="w-full px-3 py-2 rounded-xl text-xs font-mono bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none"></textarea>
                     </div>
+                </div>
+
+                <!-- TAB 7: SEO & SOCIAL LINK SHARE PREVIEW -->
+                <div x-show="currentTab === 'seo'" class="space-y-6" style="display: none;">
+                    <div class="border-b border-slate-100 dark:border-slate-800 pb-2.5">
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">SEO &amp; Social Link Share Preview</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">Open Graph &amp; Twitter Active</span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Customize your brand title, description, and high-impact preview banner for WhatsApp, Facebook, LinkedIn, Twitter/X, and Google Search.</p>
+                    </div>
+
+                    <!-- Input Fields -->
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Social Share Title (og:title / meta title)</label>
+                                <span class="text-[10px] text-slate-400" x-text="($wire.settings.seo_meta_title || '').length + ' / 70 characters'"></span>
+                            </div>
+                            <input wire:model.live="settings.seo_meta_title" type="text" placeholder="Nordroy Marine &amp; Turbochargers | Authorized Maritime Overhauls"
+                                class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
+                            <p class="text-[10px] text-slate-400 mt-1">If left blank, dynamically generates from Site Name and Corporate Tagline.</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-1">
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Social Share Snippet / Description (og:description)</label>
+                                <span class="text-[10px] text-slate-400" x-text="($wire.settings.seo_meta_description || '').length + ' / 160 characters'"></span>
+                            </div>
+                            <textarea wire:model.live="settings.seo_meta_description" rows="3" placeholder="Authorized multi-brand marine turbocharger overhauls, dynamic balancing, cartridge reconditioning, and 24/7 port emergency flying squads."
+                                class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none"></textarea>
+                            <p class="text-[10px] text-slate-400 mt-1">Shown underneath the link when shared in WhatsApp chats, Facebook posts, LinkedIn updates, and Twitter tweets.</p>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">SEO Search Keywords</label>
+                            <input wire:model="settings.seo_meta_keywords" type="text" placeholder="marine turbocharger, dynamic balancing, turbocharger overhaul, chittagong port, maritime engineering"
+                                class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
+                        </div>
+                    </div>
+
+                    <!-- Social Share Banner Asset -->
+                    <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                            <div>
+                                <span class="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">Social Share Preview Banner (og:image)</span>
+                                <p class="text-[11px] text-slate-400 mt-0.5">Recommended: 1200 &times; 630 px (1.91:1 ratio). Fallback: Official Brand Logo.</p>
+                            </div>
+                            <div>
+                                @if(!empty($settings['seo_og_image']))
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-cyan-500/10 text-cyan-700 dark:text-cyan-400 border border-cyan-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span>
+                                        Custom OG Banner Active
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        Fallback Active: Logo (assets/images/logo.png)
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Active Image Thumbnail Display -->
+                        <div class="h-44 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center justify-center mb-4 overflow-hidden relative group shadow-inner">
+                            @php
+                                $displayOgImage = !empty($settings['seo_og_image']) 
+                                    ? $settings['seo_og_image'] 
+                                    : ($settings['site_logo'] ?? 'assets/images/logo.png');
+                            @endphp
+                            <img src="{{ asset($displayOgImage) }}" 
+                                 alt="Social Preview Asset" 
+                                 class="max-h-full max-w-full object-contain p-4 group-hover:scale-102 transition-transform duration-300" />
+                            <div class="absolute bottom-2 right-2 px-2 py-1 rounded-md bg-black/70 backdrop-blur-xs text-[10px] font-mono text-white">
+                                {{ !empty($settings['seo_og_image']) ? 'Custom Banner' : 'Fallback: Official Logo' }}
+                            </div>
+                        </div>
+
+                        <!-- Media Actions -->
+                        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-800">
+                            <button type="button" 
+                                @click="$dispatch('open-media-picker', { targetField: 'seo_og_image' })"
+                                class="px-4 py-2 rounded-xl text-xs font-bold bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-xs transition-all cursor-pointer flex items-center gap-2">
+                                <x-icon name="solid:images" class="w-3.5 h-3.5" />
+                                <span>Choose from Media Library</span>
+                            </button>
+
+                            <button type="button" 
+                                wire:click="$set('settings.seo_og_image', 'assets/images/og-preview.png')"
+                                title="Use high-res 1200x630 dark turbine social banner"
+                                class="px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer flex items-center gap-1.5">
+                                <x-icon name="solid:palette" class="w-3.5 h-3.5 text-cyan-500" />
+                                <span>Use 1200&times;630 Banner Preset</span>
+                            </button>
+
+                            <button type="button" 
+                                wire:click="removeSettingAsset('seo_og_image', '')"
+                                title="Reset to default logo fallback"
+                                class="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer border border-slate-200 dark:border-slate-800 flex items-center gap-1 text-xs">
+                                <x-icon name="solid:rotate-left" class="w-3.5 h-3.5" />
+                                <span class="hidden sm:inline">Reset to Logo Fallback</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- LIVE SOCIAL LINK SHARE PREVIEW (WhatsApp & Facebook Mockup) -->
+                    <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-100 to-slate-50 dark:from-slate-950 dark:to-[#07131e] border border-slate-200 dark:border-slate-800 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <x-icon name="brands:whatsapp" class="w-4 h-4 text-emerald-500" />
+                                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">Live Social Card Simulation (WhatsApp / Facebook / LinkedIn)</h4>
+                            </div>
+                            <span class="text-[10px] text-slate-400 font-mono">Real-Time Sync</span>
+                        </div>
+
+                        <!-- Simulated Social Card -->
+                        <div class="max-w-md mx-auto rounded-2xl overflow-hidden bg-white dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-700 shadow-xl transition-all">
+                            <!-- Card Image -->
+                            <div class="h-48 w-full bg-slate-950 flex items-center justify-center overflow-hidden relative">
+                                <img src="{{ asset(!empty($settings['seo_og_image']) ? $settings['seo_og_image'] : ($settings['site_logo'] ?? 'assets/images/logo.png')) }}" 
+                                     alt="Social Card Banner" 
+                                     class="w-full h-full object-cover" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"></div>
+                                <div class="absolute bottom-2 left-3 text-[11px] font-bold text-white/90 drop-shadow-md">
+                                    {{ request()->getHost() ?: 'nordroy.swagoto.com' }}
+                                </div>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="p-4 space-y-1.5">
+                                <p class="text-[10px] uppercase font-bold tracking-widest text-[#003C58] dark:text-cyan-400">
+                                    {{ request()->getHost() ?: 'nordroy.swagoto.com' }}
+                                </p>
+                                <h5 class="text-sm font-extrabold text-slate-900 dark:text-white leading-tight line-clamp-2"
+                                    x-text="$wire.settings.seo_meta_title || '{{ $settings['site_name'] ?? 'Nordroy Marine' }} | {{ $settings['site_tagline'] ?? 'Maritime Engineering' }}'">
+                                </h5>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed"
+                                   x-text="$wire.settings.seo_meta_description || 'Authorized multi-brand marine turbocharger overhauls, high-speed dynamic balancing, cartridge reconditioning, and 24/7 port emergency flying squads.'">
+                                </p>
+                            </div>
+                        </div>
+
+                        <p class="text-center text-[11px] text-slate-500 dark:text-slate-400 italic">
+                            💡 This is exactly how your website card will render when the link is shared in WhatsApp chats, LinkedIn posts, Facebook updates, or Twitter cards.
+                        </p>
+                    </div>
+
                 </div>
 
             </div>

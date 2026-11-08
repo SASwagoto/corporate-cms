@@ -5,7 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $title ?? \App\Models\Setting::get('site_name', 'Nordroy Marine & Turbochargers') }} | {{ \App\Models\Setting::get('site_tagline', 'Authorized Multi-Brand Turbocharger Overhauls & Maritime Engineering') }}</title>
+    @php
+        $siteName = \App\Models\Setting::get('site_name', 'Nordroy Marine & Turbochargers');
+        $siteTagline = \App\Models\Setting::get('site_tagline', 'Authorized Multi-Brand Turbocharger Overhauls & Maritime Engineering');
+        $defaultTitle = \App\Models\Setting::get('seo_meta_title') ?: ($siteName . ' | ' . $siteTagline);
+        $pageTitle = (isset($title) && !empty($title)) ? ($title . ' | ' . $siteName) : $defaultTitle;
+        
+        $metaDescription = \App\Models\Setting::get('seo_meta_description', 'Authorized multi-brand marine turbocharger overhauls, high-speed dynamic balancing, cartridge reconditioning, and 24/7 port emergency flying squads in Bangladesh.');
+        $metaKeywords = \App\Models\Setting::get('seo_meta_keywords', 'marine turbocharger, dynamic balancing, turbocharger overhaul, chittagong port, maritime engineering, cartridge rebuilding, nordroy');
+        
+        // Open Graph Image: Custom OG image from Settings > Fallback to official site logo (assets/images/logo.png)
+        $customOgImage = \App\Models\Setting::get('seo_og_image');
+        if (!empty($customOgImage)) {
+            $ogImageUrl = str_starts_with($customOgImage, 'http') ? $customOgImage : url(asset($customOgImage));
+        } else {
+            $siteLogo = \App\Models\Setting::get('site_logo', 'assets/images/logo.png');
+            $ogImageUrl = str_starts_with($siteLogo, 'http') ? $siteLogo : url(asset($siteLogo));
+        }
+
+        $canonicalUrl = url()->current();
+    @endphp
+
+    <title>{{ $pageTitle }}</title>
+
+    <!-- Primary Search Engine Meta Tags -->
+    <meta name="title" content="{{ $pageTitle }}">
+    <meta name="description" content="{{ $metaDescription }}">
+    <meta name="keywords" content="{{ $metaKeywords }}">
+    <meta name="author" content="{{ $siteName }}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
+
+    <!-- Open Graph Protocol / Facebook / WhatsApp / LinkedIn / Telegram -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
+    <meta property="og:title" content="{{ $pageTitle }}">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:image" content="{{ $ogImageUrl }}">
+    <meta property="og:image:secure_url" content="{{ $ogImageUrl }}">
+    <meta property="og:image:alt" content="{{ $siteName }}">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter / X Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ $canonicalUrl }}">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+    <meta name="twitter:image" content="{{ $ogImageUrl }}">
+    <meta name="twitter:image:alt" content="{{ $siteName }}">
 
     <!-- Dynamic Favicon -->
     <link rel="icon" type="image/png" href="{{ asset(\App\Models\Setting::get('site_icon', 'assets/images/icon.png')) }}">

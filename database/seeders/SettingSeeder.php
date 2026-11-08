@@ -33,6 +33,12 @@ class SettingSeeder extends Seeder
             ['group' => 'theme', 'key' => 'site_bg_video_opacity', 'value' => '85', 'type' => 'text'],
             ['group' => 'theme', 'key' => 'theme_hero_backdrop', 'value' => 'frosted', 'type' => 'text'],
             ['group' => 'theme', 'key' => 'theme_video_break_enabled', 'value' => '1', 'type' => 'text'],
+
+            // SEO & Social Link Share Defaults
+            ['group' => 'seo', 'key' => 'seo_meta_title', 'value' => 'Nordroy Marine & Turbochargers | Authorized Maritime Overhauls', 'type' => 'text'],
+            ['group' => 'seo', 'key' => 'seo_meta_description', 'value' => 'Authorized multi-brand marine turbocharger overhauls, high-speed dynamic balancing, cartridge reconditioning, and 24/7 port emergency flying squads in Bangladesh.', 'type' => 'textarea'],
+            ['group' => 'seo', 'key' => 'seo_meta_keywords', 'value' => 'marine turbocharger, dynamic balancing, turbocharger overhaul, chittagong port, maritime engineering, cartridge rebuilding', 'type' => 'text'],
+            ['group' => 'seo', 'key' => 'seo_og_image', 'value' => '', 'type' => 'text'],
         ];
 
         foreach ($settings as $setting) {

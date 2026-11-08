@@ -63,6 +63,10 @@ class SettingsManager extends Component
             'time_format'          => 'h:i A',
             'custom_head_scripts'  => '',
             'custom_footer_scripts'=> '',
+            'seo_meta_title'       => 'Nordroy Marine & Turbochargers | Authorized Maritime Overhauls',
+            'seo_meta_description' => 'Authorized multi-brand marine turbocharger overhauls, high-speed dynamic balancing, cartridge reconditioning, and 24/7 port emergency flying squads in Bangladesh.',
+            'seo_meta_keywords'    => 'marine turbocharger, dynamic balancing, turbocharger overhaul, chittagong port, maritime engineering, cartridge rebuilding',
+            'seo_og_image'         => '',
         ];
 
         $this->settings = array_merge($defaults, $existing);
@@ -391,6 +395,10 @@ class SettingsManager extends Component
             'time_format'           => 'localization',
             'custom_head_scripts'   => 'scripts',
             'custom_footer_scripts' => 'scripts',
+            'seo_meta_title'        => 'seo',
+            'seo_meta_description'  => 'seo',
+            'seo_meta_keywords'     => 'seo',
+            'seo_og_image'          => 'seo',
         ];
 
         foreach ($this->settings as $key => $value) {
