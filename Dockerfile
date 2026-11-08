@@ -60,9 +60,11 @@ COPY --from=frontend-builder /app/public/build ./public/build
 # Install production PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Set appropriate permissions for storage and bootstrap cache
+# Set appropriate permissions for storage, cache, and public static assets
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 755 /var/www/html/public \
+    && rm -f /var/www/html/public/hot
 
 # Copy Nginx, Supervisor, and Entrypoint configurations
 COPY docker/nginx.conf /etc/nginx/http.d/default.conf

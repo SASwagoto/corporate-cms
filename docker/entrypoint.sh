@@ -40,7 +40,9 @@ else
     echo "Resolved Application Key for runtime."
 fi
 
-# Ensure storage symlink exists
+# Ensure storage symlink exists & clean any dev artifacts
+rm -f /var/www/html/public/hot
+chmod -R 755 /var/www/html/public
 php artisan storage:link --quiet || true
 
 # Clear previous cache and re-cache with verified APP_KEY
