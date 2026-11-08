@@ -119,6 +119,29 @@
             <div class="flex-1 overflow-y-auto px-4 py-6 space-y-6">
                 @include('components.layouts.partials.admin-nav')
             </div>
+
+            <!-- Mobile Drawer User Profile & Logout Footer -->
+            <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-9 h-9 rounded-full bg-[#003C58]/10 dark:bg-[#003C58]/30 border border-[#003C58]/20 flex items-center justify-center shrink-0">
+                        <img src="{{ asset(\App\Models\Setting::get('site_icon', 'assets/images/icon.png')) }}" alt="Icon" class="w-5 h-5 object-contain" />
+                    </div>
+                    <div class="truncate">
+                        <p class="text-xs font-semibold text-slate-800 dark:text-white truncate">{{ auth()->user()->name }}</p>
+                        <p class="text-[10px] text-slate-400 truncate">Super Administrator</p>
+                    </div>
+                </div>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" title="Sign Out" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-rose-600 dark:text-rose-400 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 transition-colors cursor-pointer border border-rose-200 dark:border-rose-900/50">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        <span>Sign Out</span>
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- DESKTOP FIXED SIDEBAR -->
@@ -222,6 +245,16 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
                     </a>
+
+                    <!-- Mobile Quick Sign Out Button -->
+                    <form method="POST" action="{{ route('logout') }}" class="inline-flex lg:hidden">
+                        @csrf
+                        <button type="submit" title="Sign Out" class="p-2 rounded-xl border border-rose-200 dark:border-rose-900/50 bg-rose-50/90 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-900/60 transition-colors cursor-pointer" title="Sign Out">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                        </button>
+                    </form>
                 </div>
             </header>
 
