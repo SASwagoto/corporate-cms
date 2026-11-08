@@ -54,7 +54,7 @@ class MediaAsset extends Model
         $cleanPath = ltrim(str_replace('storage/', '', $this->file_path), '/');
 
         if ($this->disk === 'public') {
-            return asset('storage/' . $cleanPath);
+            return '/storage/' . $cleanPath;
         }
 
         return Storage::disk($this->disk)->url($cleanPath);

@@ -34,7 +34,7 @@ class CustomIcon extends Model
 
         $cleanPath = ltrim(str_replace('storage/', '', $this->file_path), '/');
 
-        return asset('storage/' . $cleanPath);
+        return '/storage/' . $cleanPath;
     }
 
     public function creator(): BelongsTo

@@ -1,200 +1,7 @@
-<div x-data="{
-        isOpen: false,
-        activeTab: 'library',
-        searchQuery: '',
-        selectedCategory: 'all',
-        targetField: null,
-        targetTypeField: null,
-        targetIndex: null,
-        limit: 72,
-        isLoadingIcons: false,
-        iconsVersion: 0,
-
-        customFileSelected: false,
-        customPreviewUrl: null,
-        rawSvgInput: '',
-
-        // Lightweight lazy-loaded arrays
-        faIcons: [],
-        customIcons: {{ Js::from(\App\Services\IconRegistry::getCustomIcons()) }},
-
-        init() {
-            this.preloadIcons();
-        },
-
-        async preloadIcons() {
-            if (this.faIcons && this.faIcons.length > 0) return;
-
-            if (window._cachedNordroyIcons && window._cachedNordroyIcons.length > 0) {
-                this.faIcons = window._cachedNordroyIcons;
-                this.iconsVersion++;
-                return;
-            }
-
-            const localCached = localStorage.getItem('nordroy_fa_manifest_v2');
-            if (localCached) {
-                try {
-                    const parsed = JSON.parse(localCached);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        this.faIcons = parsed;
-                        window._cachedNordroyIcons = parsed;
-                        this.iconsVersion++;
-                        return;
-                    }
-                } catch(e) {}
-            }
-
-            this.isLoadingIcons = true;
-            try {
-                const res = await fetch('{{ route('admin.icons.manifest') }}');
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const data = await res.json();
-                this.faIcons = Array.isArray(data) ? data : [];
-                window._cachedNordroyIcons = this.faIcons;
-                this.iconsVersion++;
-                try {
-                    localStorage.setItem('nordroy_fa_manifest_v2', JSON.stringify(this.faIcons));
-                } catch(e) {}
-            } catch (e) {
-                console.error('Icons manifest fetch failed:', e);
-                this.faIcons = [];
-            } finally {
-                this.isLoadingIcons = false;
-            }
-        },
-
-        get filteredFaIcons() {
-            this.iconsVersion;
-            let list = this.faIcons || [];
-            if (this.selectedCategory !== 'all') {
-                list = list.filter(i => i.cat === this.selectedCategory);
-            }
-            if (this.searchQuery && this.searchQuery.trim() !== '') {
-                const q = this.searchQuery.toLowerCase().trim();
-                list = list.filter(i => (i.name && i.name.toLowerCase().includes(q)) || (i.title && i.title.toLowerCase().includes(q)));
-            }
-            return list;
-        },
-
-        get displayedIcons() {
-            this.iconsVersion;
-            return this.filteredFaIcons.slice(0, this.limit);
-        },
-
-        get sanitizedSvgPreview() {
-            if (!this.rawSvgInput || typeof this.rawSvgInput !== 'string') return null;
-            let val = this.rawSvgInput.trim();
-            if (!val.includes('<svg') || !val.includes('</svg>')) return null;
-
-            try {
-                // Strip scripts
-                val = val.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-                // Auto inject viewBox if missing but width/height are specified
-                if (!val.includes('viewBox')) {
-                    const m = val.match(/width=['&quot;]([0-9.]+)['&quot;]\s+height=['&quot;]([0-9.]+)['&quot;]/i);
-                    if (m) {
-                        val = val.replace(/<svg/i, `<svg viewBox='0 0 ${m[1]} ${m[2]}'`);
-                    }
-                }
-                // Strip fixed width and height so Tailwind sizing controls it
-                val = val.replace(/\s*(width|height)=['&quot;][^'&quot;]*['&quot;]/gi, '');
-                return val;
-            } catch(e) {
-                return null;
-            }
-        },
-
-        get isSvgValid() {
-            return this.sanitizedSvgPreview !== null;
-        },
-
-        async pasteFromClipboard() {
-            try {
-                const text = await navigator.clipboard.readText();
-                if (text && text.includes('<svg')) {
-                    this.rawSvgInput = text;
-                    $wire.set('modalRawSvgCode', text);
-                }
-            } catch(e) {
-                console.warn('Clipboard read permission denied or unavailable:', e);
-            }
-        },
-
-        async openPicker(detail) {
-            this.targetField = detail.targetField || null;
-            this.targetTypeField = detail.targetTypeField || null;
-            this.targetIndex = detail.targetIndex ?? null;
-            
-            $wire.set('modalTargetField', this.targetField);
-            $wire.set('modalTargetIndex', this.targetIndex);
-
-            this.searchQuery = '';
-            this.selectedCategory = 'all';
-            this.activeTab = 'library';
-            this.limit = 72;
-            this.customFileSelected = false;
-            this.customPreviewUrl = null;
-            this.rawSvgInput = '';
-
-            // Ensure icons are loaded before displaying
-            if (this.faIcons.length === 0) {
-                await this.preloadIcons();
-            }
-
-            this.isOpen = true;
-            this.$nextTick(() => { this.$refs.searchInput?.focus(); });
-        },
-
-            this.$nextTick(() => { this.$refs.searchInput?.focus(); });
-        },
-
-        selectIcon(iconId) {
-            if (this.targetField) {
-                if (typeof $wire.selectIconAsset === 'function') {
-                    $wire.selectIconAsset(this.targetField, this.targetIndex, iconId, this.targetTypeField);
-                } else if (this.targetIndex !== null) {
-                    $wire.set(`${this.targetField}.${this.targetIndex}.icon`, iconId);
-                    if (this.targetTypeField) {
-                        const isCustom = iconId.startsWith('storage/') || iconId.startsWith('http') || iconId.startsWith('raw_svg:');
-                        $wire.set(`${this.targetField}.${this.targetIndex}.${this.targetTypeField}`, isCustom ? 'upload' : 'library');
-                        if (isCustom) {
-                            $wire.set(`${this.targetField}.${this.targetIndex}.custom_path`, iconId);
-                        }
-                    }
-                } else {
-                    $wire.set(this.targetField, iconId);
-                }
-            }
-            this.closeModal();
-        },
-
-        closeModal() {
-            this.isOpen = false;
-            this.customFileSelected = false;
-            this.customPreviewUrl = null;
-            this.rawSvgInput = '';
-        }
-     }"
+<div x-data="nordroyIconPicker()"
      @open-icon-picker.window="openPicker($event.detail)"
-     @custom-icon-saved.window="
-        const newUrl = $event.detail.iconUrl || ($event.detail.iconPath ? '/' + $event.detail.iconPath.replace(/^\/+/, '') : null);
-        customIcons.unshift({ 
-            id: $event.detail.iconId, 
-            path: $event.detail.iconPath, 
-            name: $event.detail.iconName, 
-            is_raw_svg: $event.detail.isRawSvg,
-            raw_svg: $event.detail.rawSvg,
-            url: $event.detail.isRawSvg ? null : newUrl
-        });
-        if (targetField) {
-            selectIcon($event.detail.iconPath);
-        } else {
-            closeModal();
-        }
-     "
-     @custom-icon-deleted.window="
-        customIcons = customIcons.filter(i => i.id !== $event.detail.iconId && i.path !== $event.detail.iconPath);
-     "
+     @custom-icon-saved.window="handleCustomIconSaved($event.detail)"
+     @custom-icon-deleted.window="handleCustomIconDeleted($event.detail)"
      @keydown.escape.window="closeModal()"
      class="relative z-[10000]"
      style="display: none;"
@@ -380,7 +187,7 @@
                     </div>
 
                     <button type="button" 
-                        wire:click="uploadCustomIcon(targetField, targetIndex, targetTypeField)"
+                        @click="$wire.uploadCustomIcon(targetField, targetIndex, targetTypeField)"
                         wire:loading.attr="disabled"
                         :disabled="!customFileSelected"
                         class="w-full md:w-auto px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
@@ -554,7 +361,7 @@
                         <span class="text-[11px] text-slate-400" x-show="rawSvgInput.length === 0"></span>
 
                         <button type="button" 
-                                wire:click="saveRawSvgIcon(targetField, targetIndex, targetTypeField)"
+                                @click="$wire.saveRawSvgIcon(targetField, targetIndex, targetTypeField)"
                                 wire:loading.attr="disabled"
                                 :disabled="!isSvgValid"
                                 class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
@@ -584,3 +391,207 @@
         </div>
     </div>
 </div>
+
+<script>
+    window.nordroyIconPicker = function() {
+        return {
+            isOpen: false,
+            activeTab: 'library',
+            searchQuery: '',
+            selectedCategory: 'all',
+            targetField: null,
+            targetTypeField: null,
+            targetIndex: null,
+            limit: 72,
+            isLoadingIcons: false,
+            iconsVersion: 0,
+
+            customFileSelected: false,
+            customPreviewUrl: null,
+            rawSvgInput: '',
+
+            // Lightweight lazy-loaded arrays
+            faIcons: [],
+            customIcons: @json(\App\Services\IconRegistry::getCustomIcons()),
+
+            init() {
+                this.preloadIcons();
+            },
+
+            async preloadIcons() {
+                if (this.faIcons && this.faIcons.length > 0) return;
+
+                if (window._cachedNordroyIcons && window._cachedNordroyIcons.length > 0) {
+                    this.faIcons = window._cachedNordroyIcons;
+                    this.iconsVersion++;
+                    return;
+                }
+
+                const localCached = localStorage.getItem('nordroy_fa_manifest_v2');
+                if (localCached) {
+                    try {
+                        const parsed = JSON.parse(localCached);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            this.faIcons = parsed;
+                            window._cachedNordroyIcons = parsed;
+                            this.iconsVersion++;
+                            return;
+                        }
+                    } catch(e) {}
+                }
+
+                this.isLoadingIcons = true;
+                try {
+                    const res = await fetch('{{ route('admin.icons.manifest') }}');
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    const data = await res.json();
+                    this.faIcons = Array.isArray(data) ? data : [];
+                    window._cachedNordroyIcons = this.faIcons;
+                    this.iconsVersion++;
+                    try {
+                        localStorage.setItem('nordroy_fa_manifest_v2', JSON.stringify(this.faIcons));
+                    } catch(e) {}
+                } catch (e) {
+                    console.error('Icons manifest fetch failed:', e);
+                    this.faIcons = [];
+                } finally {
+                    this.isLoadingIcons = false;
+                }
+            },
+
+            get filteredFaIcons() {
+                this.iconsVersion;
+                let list = this.faIcons || [];
+                if (this.selectedCategory !== 'all') {
+                    list = list.filter(i => i.cat === this.selectedCategory);
+                }
+                if (this.searchQuery && this.searchQuery.trim() !== '') {
+                    const q = this.searchQuery.toLowerCase().trim();
+                    list = list.filter(i => (i.name && i.name.toLowerCase().includes(q)) || (i.title && i.title.toLowerCase().includes(q)));
+                }
+                return list;
+            },
+
+            get displayedIcons() {
+                this.iconsVersion;
+                return this.filteredFaIcons.slice(0, this.limit);
+            },
+
+            get sanitizedSvgPreview() {
+                if (!this.rawSvgInput || typeof this.rawSvgInput !== 'string') return null;
+                let val = this.rawSvgInput.trim();
+                if (!val.includes('<svg') || !val.includes('</svg>')) return null;
+
+                try {
+                    val = val.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+                    if (!val.includes('viewBox')) {
+                        const m = val.match(/width=['"]([0-9.]+)['"]\s+height=['"]([0-9.]+)['"]/i);
+                        if (m) {
+                            val = val.replace(/<svg/i, `<svg viewBox='0 0 ${m[1]} ${m[2]}'`);
+                        }
+                    }
+                    val = val.replace(/\s*(width|height)=['"][^'"]*['"]/gi, '');
+                    return val;
+                } catch(e) {
+                    return null;
+                }
+            },
+
+            get isSvgValid() {
+                return this.sanitizedSvgPreview !== null;
+            },
+
+            async pasteFromClipboard() {
+                try {
+                    const text = await navigator.clipboard.readText();
+                    if (text && text.includes('<svg')) {
+                        this.rawSvgInput = text;
+                        if (this.$wire) {
+                            this.$wire.set('modalRawSvgCode', text);
+                        }
+                    }
+                } catch(e) {
+                    console.warn('Clipboard read permission denied or unavailable:', e);
+                }
+            },
+
+            async openPicker(detail) {
+                detail = detail || {};
+                this.targetField = detail.targetField || null;
+                this.targetTypeField = detail.targetTypeField || null;
+                this.targetIndex = detail.targetIndex ?? null;
+                
+                if (this.$wire) {
+                    this.$wire.set('modalTargetField', this.targetField);
+                    this.$wire.set('modalTargetIndex', this.targetIndex);
+                }
+
+                this.searchQuery = '';
+                this.selectedCategory = 'all';
+                this.activeTab = 'library';
+                this.limit = 72;
+                this.customFileSelected = false;
+                this.customPreviewUrl = null;
+                this.rawSvgInput = '';
+
+                // Ensure icons are loaded before displaying
+                if (this.faIcons.length === 0) {
+                    await this.preloadIcons();
+                }
+
+                this.isOpen = true;
+                this.$nextTick(() => { this.$refs.searchInput?.focus(); });
+            },
+
+            handleCustomIconSaved(detail) {
+                detail = detail || {};
+                const newUrl = detail.iconUrl || (detail.iconPath ? '/' + detail.iconPath.replace(/^\/+/, '') : null);
+                this.customIcons.unshift({ 
+                    id: detail.iconId, 
+                    path: detail.iconPath, 
+                    name: detail.iconName, 
+                    is_raw_svg: detail.isRawSvg,
+                    raw_svg: detail.rawSvg,
+                    url: detail.isRawSvg ? null : newUrl
+                });
+                if (this.targetField) {
+                    this.selectIcon(detail.iconPath);
+                } else {
+                    this.closeModal();
+                }
+            },
+
+            handleCustomIconDeleted(detail) {
+                detail = detail || {};
+                this.customIcons = this.customIcons.filter(i => i.id !== detail.iconId && i.path !== detail.iconPath);
+            },
+
+            selectIcon(iconId) {
+                if (this.targetField && this.$wire) {
+                    if (typeof this.$wire.selectIconAsset === 'function') {
+                        this.$wire.selectIconAsset(this.targetField, this.targetIndex, iconId, this.targetTypeField);
+                    } else if (this.targetIndex !== null) {
+                        this.$wire.set(`${this.targetField}.${this.targetIndex}.icon`, iconId);
+                        if (this.targetTypeField) {
+                            const isCustom = iconId.startsWith('storage/') || iconId.startsWith('http') || iconId.startsWith('raw_svg:');
+                            this.$wire.set(`${this.targetField}.${this.targetIndex}.${this.targetTypeField}`, isCustom ? 'upload' : 'library');
+                            if (isCustom) {
+                                this.$wire.set(`${this.targetField}.${this.targetIndex}.custom_path`, iconId);
+                            }
+                        }
+                    } else {
+                        this.$wire.set(this.targetField, iconId);
+                    }
+                }
+                this.closeModal();
+            },
+
+            closeModal() {
+                this.isOpen = false;
+                this.customFileSelected = false;
+                this.customPreviewUrl = null;
+                this.rawSvgInput = '';
+            }
+        };
+    };
+</script>

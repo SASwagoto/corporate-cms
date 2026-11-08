@@ -1,100 +1,7 @@
-<div x-data="{
-        isOpen: false,
-        activeTab: 'library',
-        isUploadOnly: false,
-        searchQuery: '',
-        selectedFolder: 'all',
-        targetField: null,
-        targetIndex: null,
-        previewFiles: [],
-        isUploading: false,
-        uploadProgress: 0,
-
-        // Exclude custom-icons
-        assets: {{ Js::from(\App\Models\MediaAsset::where('folder', '!=', 'custom-icons')->latest()->get()->map(fn($a) => [
-            'id' => $a->id,
-            'name' => $a->getTranslation('title', 'en') ?: $a->file_name,
-            'url' => $a->url,
-            'is_image' => in_array(strtolower(pathinfo($a->file_name, PATHINFO_EXTENSION)), ['jpg','jpeg','png','webp','svg','gif','ico']) || str_contains($a->mime_type ?? '', 'image'),
-            'size' => $a->human_size,
-            'folder' => $a->folder,
-        ])) }},
-
-        get filteredAssets() {
-            let list = this.assets;
-            if (this.selectedFolder !== 'all') {
-                list = list.filter(a => a.folder === this.selectedFolder);
-            }
-            if (this.searchQuery.trim() !== '') {
-                const q = this.searchQuery.toLowerCase().trim();
-                list = list.filter(a => a.name.toLowerCase().includes(q));
-            }
-            return list;
-        },
-
-        openModal(detail) {
-            this.targetField = detail.targetField || null;
-            this.targetIndex = detail.targetIndex ?? null;
-            this.isUploadOnly = detail.uploadOnly || false;
-            this.activeTab = (this.isUploadOnly || detail.initialTab === 'upload') ? 'upload' : 'library';
-            this.searchQuery = '';
-            this.selectedFolder = 'all';
-            this.previewFiles = [];
-            this.isUploading = false;
-            this.uploadProgress = 0;
-            this.isOpen = true;
-
-            $wire.set('modalTargetField', this.targetField);
-            $wire.set('modalTargetIndex', this.targetIndex);
-        },
-
-        handleFileSelect(event) {
-            this.previewFiles = [];
-            const files = event.target.files;
-            if (!files) return;
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const isImg = file.type.includes('image') || file.name.endsWith('.svg');
-                this.previewFiles.push({
-                    name: file.name,
-                    size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
-                    url: isImg ? URL.createObjectURL(file) : null
-                });
-            }
-        },
-
-        selectMedia(assetId, assetUrl) {
-            // One atomic call instead of 4 sequential requests
-            if (typeof $wire.selectAsset === 'function') {
-                $wire.selectAsset(assetId, assetUrl, this.targetField, this.targetIndex);
-            } else {
-                Livewire.dispatch('media-selected', {
-                    assetId: assetId,
-                    assetUrl: assetUrl,
-                    targetField: this.targetField,
-                    targetIndex: this.targetIndex
-                });
-            }
-
-            this.closeModal();
-        },
-
-        closeModal() {
-            this.isOpen = false;
-            this.previewFiles = [];
-            this.isUploading = false;
-        }
-     }"
+<div x-data="nordroyMediaPicker()"
      @open-media-picker.window="openModal($event.detail)"
      @close-media-modal.window="closeModal()"
-     @media-asset-uploaded.window="
-        if ($event.detail && $event.detail.id) {
-            const exists = assets.some(a => a.id === $event.detail.id);
-            if (!exists) {
-                assets.unshift($event.detail);
-            }
-        }
-     "
+     @media-asset-uploaded.window="handleAssetUploaded($event.detail)"
      @keydown.escape.window="closeModal()"
      class="relative z-[9998]"
      style="display: none;"
@@ -348,3 +255,105 @@
         </div>
     </div>
 </div>
+
+<script>
+    window.nordroyMediaPicker = function() {
+        return {
+            isOpen: false,
+            activeTab: 'library',
+            isUploadOnly: false,
+            searchQuery: '',
+            selectedFolder: 'all',
+            targetField: null,
+            targetIndex: null,
+            previewFiles: [],
+            isUploading: false,
+            uploadProgress: 0,
+
+            // Exclude custom-icons
+            assets: {!! json_encode(\App\Models\MediaAsset::where('folder', '!=', 'custom-icons')->latest()->get()->map(fn($a) => [
+                'id' => $a->id,
+                'name' => $a->getTranslation('title', 'en') ?: $a->file_name,
+                'url' => $a->url,
+                'is_image' => in_array(strtolower(pathinfo($a->file_name, PATHINFO_EXTENSION)), ['jpg','jpeg','png','webp','svg','gif','ico']) || str_contains($a->mime_type ?? '', 'image'),
+                'size' => $a->human_size,
+                'folder' => $a->folder,
+            ])) !!},
+
+            get filteredAssets() {
+                let list = this.assets || [];
+                if (this.selectedFolder !== 'all') {
+                    list = list.filter(a => a.folder === this.selectedFolder);
+                }
+                if (this.searchQuery && this.searchQuery.trim() !== '') {
+                    const q = this.searchQuery.toLowerCase().trim();
+                    list = list.filter(a => a.name && a.name.toLowerCase().includes(q));
+                }
+                return list;
+            },
+
+            openModal(detail) {
+                detail = detail || {};
+                this.targetField = detail.targetField || null;
+                this.targetIndex = detail.targetIndex ?? null;
+                this.isUploadOnly = detail.uploadOnly || false;
+                this.activeTab = (this.isUploadOnly || detail.initialTab === 'upload') ? 'upload' : 'library';
+                this.searchQuery = '';
+                this.selectedFolder = 'all';
+                this.previewFiles = [];
+                this.isUploading = false;
+                this.uploadProgress = 0;
+                this.isOpen = true;
+
+                if (this.$wire) {
+                    this.$wire.set('modalTargetField', this.targetField);
+                    this.$wire.set('modalTargetIndex', this.targetIndex);
+                }
+            },
+
+            handleFileSelect(event) {
+                this.previewFiles = [];
+                const files = event.target.files;
+                if (!files) return;
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const isImg = file.type.includes('image') || file.name.endsWith('.svg');
+                    this.previewFiles.push({
+                        name: file.name,
+                        size: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+                        url: isImg ? URL.createObjectURL(file) : null
+                    });
+                }
+            },
+
+            selectMedia(assetId, assetUrl) {
+                if (typeof this.$wire?.selectAsset === 'function') {
+                    this.$wire.selectAsset(assetId, assetUrl, this.targetField, this.targetIndex);
+                } else if (window.Livewire) {
+                    Livewire.dispatch('media-selected', {
+                        assetId: assetId,
+                        assetUrl: assetUrl,
+                        targetField: this.targetField,
+                        targetIndex: this.targetIndex
+                    });
+                }
+                this.closeModal();
+            },
+
+            handleAssetUploaded(detail) {
+                if (detail && detail.id) {
+                    const exists = this.assets.some(a => a.id === detail.id);
+                    if (!exists) {
+                        this.assets.unshift(detail);
+                    }
+                }
+            },
+
+            closeModal() {
+                this.isOpen = false;
+                this.previewFiles = [];
+                this.isUploading = false;
+            }
+        };
+    };
+</script>

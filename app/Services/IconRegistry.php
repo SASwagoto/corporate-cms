@@ -162,7 +162,7 @@ class IconRegistry
 
         // 3. Uploaded Image Asset or Web URL
         if (str_starts_with($iconKey, 'storage/') || str_starts_with($iconKey, 'assets/') || str_starts_with($iconKey, 'http://') || str_starts_with($iconKey, 'https://') || str_starts_with($iconKey, '/')) {
-            $cleanUrl = (str_starts_with($iconKey, 'http://') || str_starts_with($iconKey, 'https://')) ? $iconKey : asset(ltrim($iconKey, '/'));
+            $cleanUrl = (str_starts_with($iconKey, 'http://') || str_starts_with($iconKey, 'https://')) ? $iconKey : ('/' . ltrim($iconKey, '/'));
             return '<img src="' . htmlspecialchars($cleanUrl, ENT_QUOTES, 'UTF-8') . '" alt="Custom Icon" class="' . $class . ' object-contain inline-block shrink-0" />';
         }
 

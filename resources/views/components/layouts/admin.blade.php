@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,13 +19,22 @@
     <!-- 100% Self-Hosted Webfonts (Zero Latency & 100% Offline Compatible) -->
     <link rel="stylesheet" href="{{ asset('assets/fonts/fonts.css') }}">
 
-    <!-- Anti-FOUC Theme Script (Default to Dark Mode unless Light Mode explicitly requested) -->
+    <!-- Anti-FOUC & Bulletproof Theme Persistence (Dark Mode Default, Syncs with Livewire wire:navigate) -->
     <script>
-        if (localStorage.getItem('theme') === 'light') {
-            document.documentElement.classList.remove('dark');
-        } else {
-            document.documentElement.classList.add('dark');
+        function applyNordroyAdminTheme() {
+            var theme = localStorage.getItem('theme');
+            if (theme === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.style.colorScheme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.style.colorScheme = 'dark';
+            }
         }
+        applyNordroyAdminTheme();
+        document.addEventListener('livewire:init', applyNordroyAdminTheme);
+        document.addEventListener('livewire:navigating', applyNordroyAdminTheme);
+        document.addEventListener('livewire:navigated', applyNordroyAdminTheme);
     </script>
 
     <style>
@@ -59,16 +68,33 @@
 <body class="h-full font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 selection:bg-[#003C58] selection:text-white transition-colors duration-200"
       x-data="{
           mobileSidebarOpen: false,
-          isDark: document.documentElement.classList.contains('dark'),
+          isDark: (localStorage.getItem('theme') !== 'light'),
+          init() {
+              this.syncTheme();
+              window.addEventListener('nordroy-theme-changed', () => this.syncTheme());
+          },
+          syncTheme() {
+              this.isDark = (localStorage.getItem('theme') !== 'light');
+              if (this.isDark) {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.style.colorScheme = 'dark';
+              } else {
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.style.colorScheme = 'light';
+              }
+          },
           toggleTheme() {
               this.isDark = !this.isDark;
               if (this.isDark) {
                   document.documentElement.classList.add('dark');
+                  document.documentElement.style.colorScheme = 'dark';
                   localStorage.setItem('theme', 'dark');
               } else {
                   document.documentElement.classList.remove('dark');
+                  document.documentElement.style.colorScheme = 'light';
                   localStorage.setItem('theme', 'light');
               }
+              window.dispatchEvent(new CustomEvent('nordroy-theme-changed'));
           }
       }">
 
