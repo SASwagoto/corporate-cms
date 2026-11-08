@@ -185,8 +185,12 @@ class SettingsManager extends Component
                     $this->socialLinks[$index]['custom_path'] = $iconId;
                 }
             }
+            Setting::set('social_links_data', json_encode($this->socialLinks, JSON_UNESCAPED_UNICODE), 'social', 'json');
+            Setting::flushCache();
         } elseif ($field && array_key_exists($field, $this->settings)) {
             $this->settings[$field] = $iconId;
+            Setting::set($field, $iconId, 'general');
+            Setting::flushCache();
         }
     }
 
@@ -212,12 +216,14 @@ class SettingsManager extends Component
     {
         unset($this->socialLinks[$index]);
         $this->socialLinks = array_values($this->socialLinks);
+        Setting::set('social_links_data', json_encode($this->socialLinks, JSON_UNESCAPED_UNICODE), 'social', 'json');
+        Setting::flushCache();
     }
 
     /**
-     * Upload custom file (PNG/SVG/WebP/JPG/ICO) directly into dedicated CustomIcon database & storage.
+     * Upload custom file (PNG/SVG/WebP/JPG/ICO/GIF) directly into dedicated CustomIcon database & storage.
      */
-    public function uploadCustomIcon(?string $targetField = null, ?int $targetIndex = null, ?string $targetTypeField = null): void
+    public function uploadCustomIcon(?string $targetField = null, ?int $targetIndex = null, ?string $targetTypeField = null, ?string $customTitle = null): void
     {
         $this->validate([
             'modalUploadedFile'    => 'required|file|max:5120',
@@ -229,8 +235,8 @@ class SettingsManager extends Component
         ]);
 
         $ext = strtolower($this->modalUploadedFile->getClientOriginalExtension());
-        if (!in_array($ext, ['svg', 'png', 'webp', 'jpg', 'jpeg', 'ico'])) {
-            $this->addError('modalUploadedFile', 'Supported formats: SVG, PNG, WebP, JPG, ICO.');
+        if (!in_array($ext, ['svg', 'png', 'webp', 'jpg', 'jpeg', 'ico', 'gif'])) {
+            $this->addError('modalUploadedFile', 'Supported formats: SVG, PNG, WebP, JPG, ICO, GIF.');
             return;
         }
 
@@ -240,8 +246,10 @@ class SettingsManager extends Component
         }
 
         $count = CustomIcon::count();
-        if (!empty(trim($this->modalCustomIconTitle))) {
-            $readableTitle = trim($this->modalCustomIconTitle);
+        $passedTitle = !empty(trim($customTitle ?? '')) ? trim($customTitle) : trim($this->modalCustomIconTitle ?? '');
+
+        if (!empty($passedTitle)) {
+            $readableTitle = $passedTitle;
             $baseName = Str::slug($readableTitle);
         } else {
             $original = Str::slug(pathinfo($this->modalUploadedFile->getClientOriginalName(), PATHINFO_FILENAME));
@@ -295,7 +303,7 @@ class SettingsManager extends Component
         $this->dispatch('custom-icon-saved', 
             iconId: $icon->id, 
             iconPath: $storedKey, 
-            iconUrl: $isSvg ? null : asset($storedPath),
+            iconUrl: $icon->url,
             iconName: $readableTitle,
             isRawSvg: $isSvg,
             rawSvg: $isSvg ? \App\Services\IconRegistry::cleanSvgMarkup($rawSvg, 'w-6 h-6') : null
@@ -309,25 +317,24 @@ class SettingsManager extends Component
     /**
      * Store Raw SVG Code directly without JSON array conflicts.
      */
-    public function saveRawSvgIcon(?string $targetField = null, ?int $targetIndex = null, ?string $targetTypeField = null): void
+    public function saveRawSvgIcon(?string $targetField = null, ?int $targetIndex = null, ?string $targetTypeField = null, ?string $rawSvgInput = null, ?string $customTitle = null): void
     {
-        $this->validate([
-            'modalRawSvgCode'      => 'required|string|min:20',
-            'modalCustomIconTitle' => 'nullable|string|max:50',
-        ], [
-            'modalRawSvgCode.required' => 'Please paste valid <svg>...</svg> code into the box.',
-            'modalRawSvgCode.min'      => 'The pasted SVG code is too short to be valid.',
-        ]);
+        $rawSvg = trim($rawSvgInput ?: ($this->modalRawSvgCode ?? ''));
+        $passedTitle = !empty(trim($customTitle ?? '')) ? trim($customTitle) : trim($this->modalCustomIconTitle ?? '');
 
-        $rawSvg = trim($this->modalRawSvgCode);
+        if (empty($rawSvg) || strlen($rawSvg) < 20) {
+            $this->addError('modalRawSvgCode', 'Please paste valid <svg>...</svg> code into the box.');
+            return;
+        }
+
         if (!str_contains($rawSvg, '<svg') || !str_contains($rawSvg, '</svg>')) {
             $this->addError('modalRawSvgCode', 'Invalid vector format: code must include both <svg> and </svg> tags.');
             return;
         }
 
         $count = CustomIcon::count();
-        $readableTitle = !empty(trim($this->modalCustomIconTitle)) 
-            ? trim($this->modalCustomIconTitle) 
+        $readableTitle = !empty($passedTitle) 
+            ? $passedTitle 
             : 'Custom Vector ' . ($count + 1);
 
         $icon = CustomIcon::create([

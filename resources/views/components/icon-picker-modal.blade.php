@@ -1,4 +1,5 @@
-<div x-data="nordroyIconPicker()"
+<div wire:ignore.self
+     x-data="nordroyIconPicker()"
      @open-icon-picker.window="openPicker($event.detail)"
      @custom-icon-saved.window="handleCustomIconSaved($event.detail)"
      @custom-icon-deleted.window="handleCustomIconDeleted($event.detail)"
@@ -132,74 +133,107 @@
             <!-- TAB 2: MY CUSTOM ICONS & IMAGE UPLOAD -->
             <div x-show="activeTab === 'custom'" class="flex-1 overflow-y-auto p-6 space-y-6 max-h-[65vh]" style="display: none;">
                 
-                <!-- Upload Box -->
-                <div class="p-5 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row items-center justify-between gap-5">
+                <!-- Upload Box with Drag & Drop & Direct File Handler -->
+                <div class="p-5 rounded-3xl border-2 border-dashed transition-all"
+                     :class="isDragging ? 'border-cyan-500 bg-cyan-500/5' : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950'"
+                     @dragover.prevent="isDragging = true"
+                     @dragleave.prevent="isDragging = false"
+                     @drop.prevent="handleDrop($event)">
                     
-                    <div class="flex items-center gap-4 w-full md:w-auto">
-                        <!-- Preview Box -->
-                        <div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0 shadow-inner overflow-hidden p-2">
-                            <template x-if="customPreviewUrl">
-                                <img :src="customPreviewUrl" class="w-full h-full object-contain" />
-                            </template>
-                            <template x-if="!customPreviewUrl">
-                                <x-icon name="solid:cloud-arrow-up" class="w-7 h-7 text-slate-300 dark:text-slate-600" />
-                            </template>
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-5">
+                        
+                        <div class="flex items-center gap-4 w-full md:w-auto">
+                            <!-- Preview Box -->
+                            <div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0 shadow-inner overflow-hidden p-2 relative group">
+                                <template x-if="customPreviewUrl">
+                                    <img :src="customPreviewUrl" class="w-full h-full object-contain" />
+                                </template>
+                                <template x-if="!customPreviewUrl">
+                                    <x-icon name="solid:cloud-arrow-up" class="w-7 h-7 text-slate-300 dark:text-slate-600" />
+                                </template>
+                            </div>
+
+                            <div class="space-y-1.5 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Upload Icon Image or Vector</h4>
+                                    <span class="text-[10px] font-mono text-slate-400">PNG, SVG, WebP, JPG, ICO, GIF</span>
+                                </div>
+                                
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                    <input type="text" 
+                                           x-model="customIconTitle" 
+                                           placeholder="Icon Title (e.g. Marine Radar)" 
+                                           class="w-full sm:w-64 px-3 py-1.5 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <input type="file" 
+                                               x-ref="iconFileInput" 
+                                               @change="handleFileSelect($event)"
+                                               accept=".svg,.png,.webp,.jpg,.jpeg,.ico,.gif" 
+                                               class="hidden" />
+
+                                        <button type="button" 
+                                                @click="$refs.iconFileInput.click()"
+                                                class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                                            <x-icon name="solid:folder-open" class="w-3.5 h-3.5" />
+                                            <span x-text="customFileSelected ? 'Change File' : 'Choose File'"></span>
+                                        </button>
+
+                                        <template x-if="customFileSelected">
+                                            <button type="button" 
+                                                    @click="clearSelectedFile()"
+                                                    class="p-1.5 rounded-xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer"
+                                                    title="Remove selected file">
+                                                <x-icon name="solid:xmark" class="w-4 h-4" />
+                                            </button>
+                                        </template>
+                                    </div>
+                                </div>
+
+                                <template x-if="selectedFileName">
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                        Selected: <span class="font-semibold text-slate-700 dark:text-slate-200" x-text="selectedFileName"></span>
+                                        <span class="text-[10px] text-slate-400" x-text="'(' + selectedFileSize + ')'"></span>
+                                    </p>
+                                </template>
+
+                                <template x-if="uploadError">
+                                    <span class="text-rose-500 text-xs font-semibold block mt-1" x-text="uploadError"></span>
+                                </template>
+                            </div>
                         </div>
 
-                        <div class="space-y-1.5 flex-1">
-                            <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Upload Icon Image or Vector</h4>
-                            
-                            <div class="flex items-center gap-2">
-                                <input type="text" 
-                                       wire:model="modalCustomIconTitle" 
-                                       placeholder="Icon Title (e.g. Marine Radar)" 
-                                       class="w-full sm:w-64 px-3 py-1.5 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
-                            </div>
+                        <!-- Action Button -->
+                        <div class="w-full md:w-auto flex flex-col items-center md:items-end gap-2">
+                            <button type="button" 
+                                @click="uploadCustomIconFile()"
+                                :disabled="!customFileSelected || isUploading"
+                                class="w-full md:w-auto px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
+                                
+                                <template x-if="!isUploading">
+                                    <span class="inline-flex items-center gap-2 whitespace-nowrap">
+                                        <x-icon name="solid:cloud-arrow-up" class="w-4 h-4" />
+                                        <span>Upload &amp; Save Icon</span>
+                                    </span>
+                                </template>
 
-                            <input type="file" 
-                                   wire:model="modalUploadedFile" 
-                                   @change="
-                                       const file = $event.target.files[0];
-                                       if (file) {
-                                           customFileSelected = true;
-                                           customPreviewUrl = URL.createObjectURL(file);
-                                       } else {
-                                           customFileSelected = false;
-                                           customPreviewUrl = null;
-                                       }
-                                   "
-                                   accept=".svg,.png,.webp,.jpg,.jpeg,.ico" 
-                                   class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-slate-200 dark:file:bg-slate-800 file:text-slate-800 dark:file:text-white cursor-pointer" />
-
-                            <!-- Uploading Status Indicator -->
-                            <div wire:loading wire:target="modalUploadedFile" class="text-xs text-amber-600 dark:text-amber-400 font-semibold inline-flex items-center gap-1.5">
-                                <svg class="animate-spin h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                <span>Uploading file to server...</span>
-                            </div>
-
-                            @error('modalUploadedFile')
-                                <span class="text-rose-500 text-xs font-semibold block mt-1">{{ $message }}</span>
-                            @enderror
-                            @error('modalCustomIconTitle')
-                                <span class="text-rose-500 text-xs font-semibold block mt-1">{{ $message }}</span>
-                            @enderror
+                                <template x-if="isUploading">
+                                    <span class="inline-flex items-center gap-2 whitespace-nowrap">
+                                        <svg class="animate-spin h-3.5 w-3.5 text-current shrink-0" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span x-text="uploadProgress < 100 ? ('Uploading ' + uploadProgress + '%...') : 'Processing Icon...'"></span>
+                                    </span>
+                                </template>
+                            </button>
                         </div>
                     </div>
 
-                    <button type="button" 
-                        @click="$wire.uploadCustomIcon(targetField, targetIndex, targetTypeField)"
-                        wire:loading.attr="disabled"
-                        :disabled="!customFileSelected"
-                        class="w-full md:w-auto px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
-                        <span wire:loading.remove wire:target="uploadCustomIcon" class="inline-flex items-center gap-2 whitespace-nowrap">Upload &amp; Save</span>
-                        <span wire:loading.inline-flex wire:target="uploadCustomIcon" class="items-center justify-center gap-2 whitespace-nowrap" style="display: none;">
-                            <svg class="animate-spin h-3.5 w-3.5 text-current shrink-0" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <span>Saving...</span>
-                        </span>
-                    </button>
+                    <!-- Upload Progress Bar -->
+                    <div x-show="isUploading" class="w-full mt-4 bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden" style="display: none;">
+                        <div class="bg-cyan-500 h-1.5 rounded-full transition-all duration-150" :style="'width: ' + uploadProgress + '%'"></div>
+                    </div>
                 </div>
 
                 <!-- Custom Saved Library Grid -->
@@ -209,7 +243,13 @@
                         <span class="text-[10px] text-slate-400">Click to select icon. Hover to delete permanently.</span>
                     </div>
 
-                    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+                    <template x-if="customIcons.length === 0">
+                        <div class="p-8 text-center text-xs text-slate-400 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl">
+                            No custom icons uploaded yet. Upload a PNG, SVG or paste SVG code above to build your corporate icon library.
+                        </div>
+                    </template>
+
+                    <div x-show="customIcons.length > 0" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
                         <template x-for="icon in customIcons" :key="icon.id">
                             <div class="relative group">
                                 <button type="button"
@@ -273,10 +313,9 @@
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Vector Icon Name</label>
                                 <input type="text" 
-                                       wire:model="modalCustomIconTitle" 
+                                       x-model="rawSvgTitle" 
                                        placeholder="e.g. Marine Radar Symbol" 
                                        class="w-full px-3 py-2 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
-                                @error('modalCustomIconTitle') <span class="text-rose-500 text-xs block mt-1">{{ $message }}</span> @enderror
                             </div>
 
                             <div>
@@ -287,11 +326,9 @@
                                     <span class="text-[10px] font-mono text-slate-400" x-text="rawSvgInput.length + ' chars'"></span>
                                 </div>
                                 <textarea x-model="rawSvgInput" 
-                                          @input="$wire.set('modalRawSvgCode', rawSvgInput)"
                                           rows="6" 
                                           placeholder="<svg viewBox='0 0 24 24' fill='currentColor'> ... </svg>" 
                                           class="w-full px-3 py-2 text-xs font-mono rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]"></textarea>
-                                @error('modalRawSvgCode') <span class="text-rose-500 text-xs block mt-1">{{ $message }}</span> @enderror
                             </div>
                         </div>
 
@@ -361,12 +398,14 @@
                         <span class="text-[11px] text-slate-400" x-show="rawSvgInput.length === 0"></span>
 
                         <button type="button" 
-                                @click="$wire.saveRawSvgIcon(targetField, targetIndex, targetTypeField)"
-                                wire:loading.attr="disabled"
-                                :disabled="!isSvgValid"
+                                @click="saveRawSvg()"
+                                :disabled="!isSvgValid || isSavingSvg"
                                 class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
-                            <span wire:loading.remove wire:target="saveRawSvgIcon" class="inline-flex items-center gap-2 whitespace-nowrap">Store Vector &amp; Use Icon</span>
-                            <span wire:loading.inline-flex wire:target="saveRawSvgIcon" class="items-center justify-center gap-2 whitespace-nowrap" style="display: none;">
+                            <span x-show="!isSavingSvg" class="inline-flex items-center gap-2 whitespace-nowrap">
+                                <x-icon name="solid:cloud-arrow-up" class="w-4 h-4" />
+                                <span>Store Vector &amp; Use Icon</span>
+                            </span>
+                            <span x-show="isSavingSvg" class="items-center justify-center gap-2 whitespace-nowrap" style="display: none;">
                                 <svg class="animate-spin h-3.5 w-3.5 text-current shrink-0" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -406,9 +445,22 @@
             isLoadingIcons: false,
             iconsVersion: 0,
 
+            // File upload state
+            selectedFile: null,
+            selectedFileName: null,
+            selectedFileSize: null,
             customFileSelected: false,
             customPreviewUrl: null,
+            customIconTitle: '',
+            isUploading: false,
+            uploadProgress: 0,
+            uploadError: null,
+            isDragging: false,
+
+            // Raw SVG state
             rawSvgInput: '',
+            rawSvgTitle: '',
+            isSavingSvg: false,
 
             // Lightweight lazy-loaded arrays
             faIcons: [],
@@ -501,14 +553,134 @@
                 return this.sanitizedSvgPreview !== null;
             },
 
+            formatFileSize(bytes) {
+                if (!bytes || bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            },
+
+            handleFileSelect(event) {
+                const file = event.target.files ? event.target.files[0] : null;
+                this.processSelectedFile(file);
+            },
+
+            handleDrop(event) {
+                this.isDragging = false;
+                const file = event.dataTransfer?.files?.[0];
+                if (file) {
+                    this.processSelectedFile(file);
+                }
+            },
+
+            processSelectedFile(file) {
+                this.uploadError = null;
+                if (!file) {
+                    this.clearSelectedFile();
+                    return;
+                }
+
+                const validExtensions = ['svg', 'png', 'webp', 'jpg', 'jpeg', 'ico', 'gif'];
+                const ext = file.name.split('.').pop().toLowerCase();
+                if (!validExtensions.includes(ext)) {
+                    this.uploadError = 'Supported formats: PNG, SVG, WebP, JPG, ICO, GIF.';
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    this.uploadError = 'Icon file size exceeds 5MB limit.';
+                    return;
+                }
+
+                this.selectedFile = file;
+                this.selectedFileName = file.name;
+                this.selectedFileSize = this.formatFileSize(file.size);
+                this.customFileSelected = true;
+                this.customPreviewUrl = URL.createObjectURL(file);
+
+                if (!this.customIconTitle || this.customIconTitle.trim() === '') {
+                    const base = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                    this.customIconTitle = base.replace(/[-_]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase()).trim();
+                }
+            },
+
+            clearSelectedFile() {
+                this.selectedFile = null;
+                this.selectedFileName = null;
+                this.selectedFileSize = null;
+                this.customFileSelected = false;
+                this.customPreviewUrl = null;
+                this.customIconTitle = '';
+                this.uploadProgress = 0;
+                this.uploadError = null;
+                if (this.$refs.iconFileInput) {
+                    this.$refs.iconFileInput.value = '';
+                }
+            },
+
+            uploadCustomIconFile() {
+                if (!this.selectedFile) {
+                    this.uploadError = 'Please select an icon file first.';
+                    return;
+                }
+
+                this.isUploading = true;
+                this.uploadProgress = 0;
+                this.uploadError = null;
+
+                const file = this.selectedFile;
+                const title = (this.customIconTitle || '').trim();
+
+                this.$wire.upload(
+                    'modalUploadedFile',
+                    file,
+                    () => {
+                        this.$wire.uploadCustomIcon(this.targetField, this.targetIndex, this.targetTypeField, title)
+                            .then(() => {
+                                this.isUploading = false;
+                                this.clearSelectedFile();
+                            })
+                            .catch((err) => {
+                                this.isUploading = false;
+                                this.uploadError = 'Failed to save custom icon on server.';
+                                console.error('Error saving custom icon:', err);
+                            });
+                    },
+                    (error) => {
+                        this.isUploading = false;
+                        this.uploadError = error || 'Upload failed. File must be under 5MB.';
+                    },
+                    (event) => {
+                        this.uploadProgress = event.detail.progress;
+                    }
+                );
+            },
+
+            saveRawSvg() {
+                if (!this.isSvgValid) return;
+                this.isSavingSvg = true;
+
+                const title = (this.rawSvgTitle || '').trim();
+                const svgCode = (this.rawSvgInput || '').trim();
+
+                this.$wire.saveRawSvgIcon(this.targetField, this.targetIndex, this.targetTypeField, svgCode, title)
+                    .then(() => {
+                        this.isSavingSvg = false;
+                        this.rawSvgInput = '';
+                        this.rawSvgTitle = '';
+                    })
+                    .catch((err) => {
+                        this.isSavingSvg = false;
+                        console.error('Failed to save raw SVG:', err);
+                    });
+            },
+
             async pasteFromClipboard() {
                 try {
                     const text = await navigator.clipboard.readText();
                     if (text && text.includes('<svg')) {
                         this.rawSvgInput = text;
-                        if (this.$wire) {
-                            this.$wire.set('modalRawSvgCode', text);
-                        }
                     }
                 } catch(e) {
                     console.warn('Clipboard read permission denied or unavailable:', e);
@@ -528,13 +700,12 @@
 
                 this.searchQuery = '';
                 this.selectedCategory = 'all';
-                this.activeTab = 'library';
+                this.activeTab = detail.initialTab || 'library';
                 this.limit = 72;
-                this.customFileSelected = false;
-                this.customPreviewUrl = null;
+                this.clearSelectedFile();
                 this.rawSvgInput = '';
+                this.rawSvgTitle = '';
 
-                // Ensure icons are loaded before displaying
                 if (this.faIcons.length === 0) {
                     await this.preloadIcons();
                 }
@@ -588,9 +759,9 @@
 
             closeModal() {
                 this.isOpen = false;
-                this.customFileSelected = false;
-                this.customPreviewUrl = null;
+                this.clearSelectedFile();
                 this.rawSvgInput = '';
+                this.rawSvgTitle = '';
             }
         };
     };
