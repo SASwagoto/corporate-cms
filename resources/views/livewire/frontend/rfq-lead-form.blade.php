@@ -25,8 +25,8 @@
             <div class="max-w-md mx-auto p-4 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 text-left space-y-2 text-xs">
                 <div class="flex items-center justify-between text-[11px] font-mono">
                     <span class="text-slate-500 dark:text-slate-400 uppercase">Duty Desk Protocol:</span>
-                    <span class="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span class="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
                         Response within 45 Mins
                     </span>
                 </div>
@@ -215,15 +215,15 @@
                     class="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white shadow-md active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2 group disabled:opacity-70"
                     style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color));">
                 
-                <span wire:loading.remove wire:target="submitRfq" class="flex items-center gap-2">
-                    <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <span wire:loading.remove wire:target="submitRfq" class="inline-flex items-center justify-center gap-2 whitespace-nowrap">
+                    <svg class="w-4 h-4 shrink-0 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                     <span>Transmit RFQ to 24/7 Port Duty Desk</span>
                 </span>
 
-                <span wire:loading wire:target="submitRfq" class="flex items-center gap-2">
-                    <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <span wire:loading.inline-flex wire:target="submitRfq" class="items-center justify-center gap-2 whitespace-nowrap" style="display: none;">
+                    <svg class="w-4 h-4 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>

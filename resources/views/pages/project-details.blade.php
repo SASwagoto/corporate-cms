@@ -26,7 +26,7 @@
                         {{ $project['classification'] }}
                     </span>
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
                         {{ $project['status'] }}
                     </span>
                 </div>
@@ -53,7 +53,7 @@
                 <!-- Video Top Bar Info -->
                 <div class="px-5 py-3.5 bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white flex items-center justify-between border-b border-slate-200 dark:border-slate-800 text-xs">
                     <div class="flex items-center gap-2.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
                         <span class="font-bold tracking-wider uppercase font-mono text-cyan-400">Engineering Documentation Video</span>
                         <span class="text-slate-400 hidden sm:inline">&bull; 1080p Full HD Audio &amp; Video</span>
                     </div>
@@ -258,7 +258,7 @@
                     <!-- 24/7 Port Call & Urgent Assistance Box -->
                     <div class="p-6 rounded-3xl bg-linear-to-br from-[#003C58] to-[#042436] text-white space-y-4 shadow-xl">
                         <div class="flex items-center gap-2.5">
-                            <span class="w-3 h-3 rounded-full bg-cyan-400 animate-ping"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
                             <span class="text-xs font-extrabold uppercase tracking-widest text-cyan-300">24/7 Port Call Squad</span>
                         </div>
                         <h4 class="text-base font-bold font-heading">Need Urgent Flying Squad or Dynamic Balancing?</h4>

@@ -65,7 +65,7 @@
                 <div class="flex items-center justify-between text-slate-400">
                     <span class="text-xs font-semibold uppercase tracking-wider group-hover:text-[#003C58] dark:group-hover:text-cyan-400 transition-colors">Inquiries &amp; Leads</span>
                     @if ($dashNewEnquiryCount > 0)
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white animate-pulse">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white">
                             {{ $dashNewEnquiryCount }} NEW
                         </span>
                     @else

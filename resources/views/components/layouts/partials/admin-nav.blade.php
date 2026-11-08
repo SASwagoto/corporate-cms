@@ -90,7 +90,7 @@
                 Enquiries / RFQ
             </span>
             @if ($newEnquiriesCount > 0)
-                <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-md bg-rose-500 text-white animate-pulse">
+                <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-md bg-rose-500 text-white">
                     {{ $newEnquiriesCount }}
                 </span>
             @else

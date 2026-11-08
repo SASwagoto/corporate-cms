@@ -6,7 +6,7 @@
             <div class="flex items-center gap-2">
                 <h1 class="text-xl font-bold font-heading text-slate-900 dark:text-white">Inquiries &amp; RFQ Duty Desk</h1>
                 @if ($counts['new'] > 0)
-                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white animate-pulse">
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white">
                         {{ $counts['new'] }} NEW
                     </span>
                 @endif
@@ -20,21 +20,41 @@
             @if ($counts['new'] > 0)
                 <button type="button" 
                         wire:click="markAllAsRead" 
-                        class="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-1.5 cursor-pointer">
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Mark All Read</span>
+                        wire:loading.attr="disabled"
+                        class="px-3 py-2 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50">
+                    <span wire:loading.remove wire:target="markAllAsRead" class="inline-flex items-center gap-1.5 whitespace-nowrap">
+                        <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Mark All Read</span>
+                    </span>
+                    <span wire:loading.inline-flex wire:target="markAllAsRead" class="items-center justify-center gap-1.5 whitespace-nowrap" style="display: none;">
+                        <svg class="animate-spin h-3.5 w-3.5 text-current shrink-0" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Updating...</span>
+                    </span>
                 </button>
             @endif
 
             <button type="button" 
                     wire:click="exportCsv" 
-                    class="px-3.5 py-2 rounded-xl text-xs font-bold bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer">
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                <span>Export CSV</span>
+                    wire:loading.attr="disabled"
+                    class="px-3.5 py-2 rounded-xl text-xs font-bold bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm transition-all inline-flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50">
+                <span wire:loading.remove wire:target="exportCsv" class="inline-flex items-center gap-1.5 whitespace-nowrap">
+                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    <span>Export CSV</span>
+                </span>
+                <span wire:loading.inline-flex wire:target="exportCsv" class="items-center justify-center gap-1.5 whitespace-nowrap" style="display: none;">
+                    <svg class="animate-spin h-3.5 w-3.5 text-current shrink-0" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Exporting...</span>
+                </span>
             </button>
         </div>
     </div>
@@ -169,7 +189,7 @@
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     <div class="flex items-center gap-2">
                                         @if ($enquiry->status === 'new')
-                                            <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping" title="Unread Lead"></span>
+                                            <span class="w-2 h-2 rounded-full bg-rose-500 shrink-0" title="Unread Lead"></span>
                                         @endif
                                         <span class="font-mono font-bold text-slate-900 dark:text-white">
                                             #NRQ-{{ str_pad($enquiry->id, 4, '0', STR_PAD_LEFT) }}
@@ -213,7 +233,7 @@
                                 <!-- Urgency Badge -->
                                 <td class="px-5 py-4 whitespace-nowrap">
                                     @if ($isEmergency)
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 animate-pulse">
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30">
                                             <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                                             EMERGENCY
                                         </span>
