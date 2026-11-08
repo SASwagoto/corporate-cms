@@ -51,6 +51,9 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
+# Ensure base .env file exists from .env.example
+RUN cp .env.example .env 2>/dev/null || touch .env
+
 # Copy compiled frontend assets from Stage 1
 COPY --from=frontend-builder /app/public/build ./public/build
 
