@@ -4,12 +4,17 @@ namespace App\Livewire\Admin\Theme;
 
 use App\Models\Setting;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 #[Layout('components.layouts.admin')]
 class ThemeStudio extends Component
 {
-    public string $activeTab = 'colors'; // 'colors', 'typography', 'buttons', 'layout', 'header'
+    public string $activeTab = 'colors'; // 'colors', 'typography', 'buttons', 'layout', 'header', 'background'
+
+    // Media Modal State
+    public ?string $modalTargetField = null;
+    public ?int $modalTargetIndex = null;
 
     // Full Design Tokens State
     public array $theme = [];
@@ -18,11 +23,11 @@ class ThemeStudio extends Component
     public array $presets = [
         'nordroy_marine' => [
             'name'          => 'Nordroy Marine & Power (Active)',
-            'primary'       => '#013d5a',
-            'secondary'     => '#6f7478',
+            'primary'       => '#003C58',
+            'secondary'     => '#75767A',
             'accent'        => '#0ea5e9',
             'surface_light' => '#ffffff',
-            'surface_dark'  => '#0a1926',
+            'surface_dark'  => '#07131e',
             'border_color'  => '#e2e8f0',
             'font_head'     => 'Plus Jakarta Sans',
             'font_body'     => 'Plus Jakarta Sans',
@@ -167,12 +172,12 @@ class ThemeStudio extends Component
         $existing = Setting::all()->pluck('value', 'key')->toArray();
 
         $defaults = [
-            // Colors
-            'theme_primary_color'    => '#013d5a',
-            'theme_secondary_color'  => '#6f7478',
+            // Colors (Official Logo Brand Colors: #003C58 & #75767A)
+            'theme_primary_color'    => '#003C58',
+            'theme_secondary_color'  => '#75767A',
             'theme_accent_color'     => '#0ea5e9',
             'theme_surface_light'    => '#ffffff',
-            'theme_surface_dark'     => '#0a1926',
+            'theme_surface_dark'     => '#07131e',
             'theme_border_color'     => '#e2e8f0',
 
             // Typography
@@ -200,9 +205,33 @@ class ThemeStudio extends Component
             // Layout & Spacing
             'theme_container_width'  => '1536px', // 2xl
             'theme_section_padding'  => '96px',   // py-24
+
+            // Full-Site Background & Motion Video (Turbo Internacional Architecture)
+            'site_bg_video_enabled'     => '1',
+            'site_bg_video_url'         => 'assets/videos/background-marine.mp4',
+            'site_bg_video_opacity'     => '85',
+            'theme_hero_backdrop'       => 'frosted', // 'frosted', 'transparent', 'subtle_tint', 'solid'
+            'theme_video_break_enabled' => '1',
         ];
 
         $this->theme = array_merge($defaults, $existing);
+    }
+
+    #[On('media-selected')]
+    public function handleMediaSelected(int $assetId, string $assetUrl, ?string $targetField = null): void
+    {
+        $field = $targetField ?: $this->modalTargetField;
+        if ($field && array_key_exists($field, $this->theme)) {
+            $this->theme[$field] = $assetUrl;
+        }
+    }
+
+    public function selectAsset(int $assetId, string $assetUrl, ?string $targetField = null, ?int $targetIndex = null): void
+    {
+        $field = $targetField ?: $this->modalTargetField;
+        if ($field && array_key_exists($field, $this->theme)) {
+            $this->theme[$field] = $assetUrl;
+        }
     }
 
     public function setTab(string $tab): void

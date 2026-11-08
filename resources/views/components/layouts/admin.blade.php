@@ -13,12 +13,12 @@
     <!-- 100% Self-Hosted Webfonts (Zero Latency & 100% Offline Compatible) -->
     <link rel="stylesheet" href="{{ asset('assets/fonts/fonts.css') }}">
 
-    <!-- Anti-FOUC Theme Script -->
+    <!-- Anti-FOUC Theme Script (Default to Dark Mode unless Light Mode explicitly requested) -->
     <script>
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
+        if (localStorage.getItem('theme') === 'light') {
             document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
         }
     </script>
 
@@ -50,7 +50,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="h-full font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 selection:bg-[#013d5a] selection:text-white transition-colors duration-200"
+<body class="h-full font-sans antialiased bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 selection:bg-[#003C58] selection:text-white transition-colors duration-200"
       x-data="{
           mobileSidebarOpen: false,
           isDark: document.documentElement.classList.contains('dark'),
@@ -84,7 +84,7 @@
                      class="w-14 h-14 object-contain animate-turbine icon-glow" />
             </div>
             <div class="w-36 h-[2px] bg-slate-100 dark:bg-slate-900 rounded-full overflow-hidden relative shadow-inner">
-                <div class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-[#013d5a] to-cyan-500 dark:via-cyan-400 dark:to-teal-300 rounded-full animate-[progress_1.2s_ease-in-out_infinite]"></div>
+                <div class="absolute inset-0 w-1/2 bg-gradient-to-r from-transparent via-[#003C58] to-cyan-500 dark:via-cyan-400 dark:to-teal-300 rounded-full animate-[progress_1.2s_ease-in-out_infinite]"></div>
             </div>
         </div>
     </div>
@@ -138,7 +138,7 @@
 
             <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between">
                 <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-9 h-9 rounded-full bg-[#013d5a]/10 dark:bg-[#013d5a]/30 border border-[#013d5a]/20 flex items-center justify-center shrink-0">
+                    <div class="w-9 h-9 rounded-full bg-[#003C58]/10 dark:bg-[#003C58]/30 border border-[#003C58]/20 flex items-center justify-center shrink-0">
                         <img src="{{ asset(\App\Models\Setting::get('site_icon', 'assets/images/icon.png')) }}" alt="Icon" class="w-5 h-5 object-contain" />
                     </div>
                     <div class="truncate">
@@ -196,7 +196,7 @@
                         <input x-ref="searchInput"
                                type="text" 
                                placeholder="Search CMS sections..." 
-                               class="w-48 lg:w-64 pl-9 pr-12 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#013d5a] dark:focus:ring-cyan-500/50 focus:w-72 transition-all duration-200" />
+                               class="w-48 lg:w-64 pl-9 pr-12 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#003C58] dark:focus:ring-cyan-500/50 focus:w-72 transition-all duration-200" />
                         <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
                             <kbd class="text-[10px] bg-white dark:bg-slate-700 text-slate-400 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600 font-mono shadow-xs">⌘K</kbd>
                         </div>

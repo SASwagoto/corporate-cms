@@ -3,7 +3,7 @@
     <!-- Hero Header (Transparent so background video is visible behind the title) -->
     <div class="py-16 sm:py-24 bg-transparent border-b border-slate-200/80 dark:border-slate-800 transition-colors">
         <div class="max-w-[1536px] mx-auto px-4 sm:px-8">
-            <span class="text-xs font-bold uppercase tracking-wider text-[#013d5a] dark:text-cyan-400 bg-white dark:bg-slate-900 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-2xs">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#003C58] dark:text-cyan-400 bg-white dark:bg-slate-900 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 shadow-2xs">
                 Track Record &amp; Media
             </span>
             <h1 class="text-3xl sm:text-5xl font-extrabold font-heading text-slate-900 dark:text-white mt-4 leading-tight drop-shadow-xs">
@@ -19,62 +19,98 @@
     <section id="projects" class="py-20 bg-slate-50 dark:bg-[#06121d] border-b border-slate-200 dark:border-slate-800">
         <div class="max-w-[1536px] mx-auto px-4 sm:px-8 space-y-12">
             <div class="text-center max-w-2xl mx-auto space-y-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-[#013d5a] dark:text-cyan-400">Case Studies</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#003C58] dark:text-cyan-400">Case Studies</span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-slate-900 dark:text-white">Delivered Marine &amp; Industrial Overhauls</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Project 1 -->
-                <div class="rounded-3xl bg-white dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-lg transition-all group">
-                    <div class="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center">
-                        <img src="{{ asset('assets/images/gallery/gallery-plant.webp') }}" alt="7.2 MW Plant Overhaul" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                        <div class="absolute bottom-3 left-4 right-4 flex justify-between text-[11px] font-bold text-white">
-                            <span class="px-2 py-0.5 rounded bg-[#013d5a]">Power Generation</span>
-                            <span class="text-cyan-400 font-mono">7.2 MW Plant</span>
+                <div class="rounded-3xl bg-white dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-lg transition-all group flex flex-col justify-between">
+                    <div>
+                        <a href="{{ route('project.details', ['slug' => 'industrial-power-plant-balancing']) }}" class="h-48 bg-slate-100 dark:bg-slate-900 relative overflow-hidden flex items-center justify-center block">
+                            <img src="{{ asset('assets/images/gallery/gallery-plant.webp') }}" alt="7.2 MW Plant Overhaul" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+                            <div class="absolute bottom-3 left-4 right-4 flex justify-between text-[11px] font-bold text-white">
+                                <span class="px-2 py-0.5 rounded bg-[#003C58]">Power Generation</span>
+                                <span class="text-cyan-400 font-mono">2.5 MW Captive Unit</span>
+                            </div>
+                        </a>
+                        <div class="p-6 space-y-3">
+                            <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">
+                                <a href="{{ route('project.details', ['slug' => 'industrial-power-plant-balancing']) }}" class="hover:text-[#003C58] dark:hover:text-cyan-400 transition-colors">
+                                    2.5MW Industrial Captive Power Plant Turbocharger Refit
+                                </a>
+                            </h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Complete overhaul, dynamic balancing, and compressor wheel replacement at Gazipur industrial zone. Zero unplanned outages achieved.
+                            </p>
                         </div>
                     </div>
-                    <div class="p-6 space-y-3">
-                        <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">Waukesha 900kW x 8 Gas Engine Overhaul</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Scheduled turnaround maintenance for 8 turbochargers at Ekhlus Spinning Mills Ltd. Zero operational stoppage achieved.
-                        </p>
+                    <div class="px-6 pb-6 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                        <span class="text-slate-400">Gazipur, Bangladesh</span>
+                        <a href="{{ route('project.details', ['slug' => 'industrial-power-plant-balancing']) }}" class="font-bold text-[#003C58] dark:text-cyan-400 hover:underline inline-flex items-center gap-1">
+                            <span>Case Study</span> &rarr;
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 2 -->
-                <div class="rounded-3xl bg-white dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-lg transition-all group">
-                    <div class="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center">
-                        <img src="{{ asset('assets/images/gallery/gallery-vessel.jpg') }}" alt="Marine Vessel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                        <div class="absolute bottom-3 left-4 right-4 flex justify-between text-[11px] font-bold text-white">
-                            <span class="px-2 py-0.5 rounded bg-[#013d5a]">Marine Fleet</span>
-                            <span class="text-cyan-400 font-mono">45k DWT Vessel</span>
+                <div class="rounded-3xl bg-white dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-lg transition-all group flex flex-col justify-between">
+                    <div>
+                        <a href="{{ route('project.details', ['slug' => 'emergency-anchorage-flying-squad']) }}" class="h-48 bg-slate-100 dark:bg-slate-900 relative overflow-hidden flex items-center justify-center block">
+                            <img src="{{ asset('assets/images/gallery/gallery-vessel.jpg') }}" alt="Marine Vessel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+                            <div class="absolute bottom-3 left-4 right-4 flex justify-between text-[11px] font-bold text-white">
+                                <span class="px-2 py-0.5 rounded bg-[#003C58]">Marine Fleet</span>
+                                <span class="text-cyan-400 font-mono">85k DWT Bulk Carrier</span>
+                            </div>
+                        </a>
+                        <div class="p-6 space-y-3">
+                            <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">
+                                <a href="{{ route('project.details', ['slug' => 'emergency-anchorage-flying-squad']) }}" class="hover:text-[#003C58] dark:hover:text-cyan-400 transition-colors">
+                                    ABB TPL-77 Emergency Cartridge Swap at Sea
+                                </a>
+                            </h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Anchorage flying squad response at Chittagong Port, boarding via offshore tug and completing cartridge swap in 22 hours.
+                            </p>
                         </div>
                     </div>
-                    <div class="p-6 space-y-3">
-                        <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">ABB TPL-77 Emergency Cartridge Swap</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Anchorage emergency response at Chattogram Port, resolving severe dynamic surging within 18 hours.
-                        </p>
+                    <div class="px-6 pb-6 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                        <span class="text-slate-400">Bay of Bengal Anchorage</span>
+                        <a href="{{ route('project.details', ['slug' => 'emergency-anchorage-flying-squad']) }}" class="font-bold text-[#003C58] dark:text-cyan-400 hover:underline inline-flex items-center gap-1">
+                            <span>Case Study</span> &rarr;
+                        </a>
                     </div>
                 </div>
 
                 <!-- Project 3 -->
-                <div class="rounded-3xl bg-white dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-lg transition-all group">
-                    <div class="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center">
-                        <img src="{{ asset('assets/images/gallery/gallery-generator.webp') }}" alt="Industrial Compressors" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
-                        <div class="absolute bottom-3 left-4 right-4 flex justify-between text-[11px] font-bold text-white">
-                            <span class="px-2 py-0.5 rounded bg-[#013d5a]">Industrial Terminal</span>
-                            <span class="text-cyan-400 font-mono">Ariel Units</span>
+                <div class="rounded-3xl bg-white dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-lg transition-all group flex flex-col justify-between">
+                    <div>
+                        <a href="{{ route('project.details', ['slug' => 'marine-vessel-turbocharger-overhaul']) }}" class="h-48 bg-slate-100 dark:bg-slate-900 relative overflow-hidden flex items-center justify-center block">
+                            <img src="{{ asset('assets/images/gallery/gallery-generator.webp') }}" alt="Industrial Compressors" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+                            <div class="absolute bottom-3 left-4 right-4 flex justify-between text-[11px] font-bold text-white">
+                                <span class="px-2 py-0.5 rounded bg-[#003C58]">Marine Turbo</span>
+                                <span class="text-cyan-400 font-mono">MAN NR/S 34</span>
+                            </div>
+                        </a>
+                        <div class="p-6 space-y-3">
+                            <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">
+                                <a href="{{ route('project.details', ['slug' => 'marine-vessel-turbocharger-overhaul']) }}" class="hover:text-[#003C58] dark:hover:text-cyan-400 transition-colors">
+                                    Container Vessel Turbocharger Refit &amp; Dynamic Balancing
+                                </a>
+                            </h3>
+                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                Complete ultrasonic chemical decarbonization, rotor dynamic balancing to ISO 1940 Grade G1.0, delivered ahead of port sailing schedule.
+                            </p>
                         </div>
                     </div>
-                    <div class="p-6 space-y-3">
-                        <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">Gas Compression Turbine Modernization</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Retrofitting legacy turbochargers with high-efficiency titanium impellers, reducing thermodynamic fuel consumption by 6.2%.
-                        </p>
+                    <div class="px-6 pb-6 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                        <span class="text-slate-400">Port of Singapore</span>
+                        <a href="{{ route('project.details', ['slug' => 'marine-vessel-turbocharger-overhaul']) }}" class="font-bold text-[#003C58] dark:text-cyan-400 hover:underline inline-flex items-center gap-1">
+                            <span>Case Study</span> &rarr;
+                        </a>
                     </div>
                 </div>
             </div>
@@ -85,7 +121,7 @@
     <section id="videos" class="py-20 bg-white dark:bg-[#07131e] border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div class="max-w-[1536px] mx-auto px-4 sm:px-8 space-y-12">
             <div class="text-center max-w-2xl mx-auto space-y-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-[#013d5a] dark:text-cyan-400">Media Stream</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#003C58] dark:text-cyan-400">Media Stream</span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-slate-900 dark:text-white">Video Gallery (Hover to Play)</h2>
                 <p class="text-xs text-slate-500">Move your mouse over the cards below to preview our operations in motion. Click to play full video.</p>
             </div>
@@ -94,10 +130,10 @@
                 <!-- Video 1 -->
                 <div class="rounded-3xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group"
                      x-data="{ isHovered: false }">
-                    <div class="relative aspect-video bg-black overflow-hidden flex items-center justify-center cursor-pointer"
-                         @mouseenter="isHovered = true; $refs.vid1.play()"
-                         @mouseleave="isHovered = false; $refs.vid1.pause(); $refs.vid1.currentTime = 0"
-                         @click="$dispatch('open-video-modal', { title: 'Dynamic Rotor Balancing at 100,000 RPM (Schenck Rig Calibration)', embedUrl: 'https://www.youtube-nocookie.com/embed/5mGhWcKzDTo' })">
+                    <a href="{{ route('project.details', ['slug' => 'marine-vessel-turbocharger-overhaul']) }}"
+                       class="relative aspect-video bg-slate-100 dark:bg-black overflow-hidden flex items-center justify-center cursor-pointer block"
+                       @mouseenter="isHovered = true; $refs.vid1.play()"
+                       @mouseleave="isHovered = false; $refs.vid1.pause(); $refs.vid1.currentTime = 0">
                         
                         <video x-ref="vid1" loop muted playsinline preload="metadata" 
                                class="w-full h-full object-cover">
@@ -109,31 +145,34 @@
                              x-show="!isHovered"
                              class="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none transition-opacity duration-150" />
 
-                        <div x-show="!isHovered" class="absolute inset-0 bg-slate-950/25 flex items-center justify-center transition-opacity pointer-events-none z-20">
-                            <div class="w-12 h-12 rounded-full bg-white/95 text-[#013d5a] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <div x-show="!isHovered" class="absolute inset-0 bg-slate-900/15 dark:bg-black/40 flex items-center justify-center transition-opacity pointer-events-none z-20">
+                            <div class="w-12 h-12 rounded-full bg-white/95 text-[#003C58] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                 <x-icon name="solid:play" class="w-4 h-4 translate-x-0.5" />
                             </div>
                         </div>
 
-                        <div class="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/75 text-[10px] font-mono text-white pointer-events-none z-20">
+                        <div class="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-white/95 dark:bg-black/80 text-[10px] font-mono font-medium text-slate-800 dark:text-white border border-slate-200/80 dark:border-transparent shadow-sm pointer-events-none z-20">
                             0:24 HD &bull; Hover to Preview
                         </div>
-                    </div>
+                    </a>
                     <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
                         <div class="space-y-1.5">
-                            <span class="text-[10px] font-bold text-[#013d5a] dark:text-cyan-400 uppercase tracking-widest">Schenck Dynamic Test</span>
-                            <h4 class="text-sm font-bold font-heading text-slate-900 dark:text-white">100,000 RPM Dynamic Balancing Demonstration</h4>
+                            <span class="text-[10px] font-bold text-[#003C58] dark:text-cyan-400 uppercase tracking-widest">Schenck Dynamic Test</span>
+                            <h4 class="text-sm font-bold font-heading text-slate-900 dark:text-white">
+                                <a href="{{ route('project.details', ['slug' => 'marine-vessel-turbocharger-overhaul']) }}" class="hover:text-[#003C58] dark:hover:text-cyan-400 transition-colors">
+                                    100,000 RPM Dynamic Balancing Demonstration
+                                </a>
+                            </h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400">Computerized tolerance monitoring on Schenck hard-bearing system.</p>
                         </div>
                         <div class="pt-3 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs">
-                            <button type="button" 
-                                    @click="$dispatch('open-video-modal', { title: 'Dynamic Rotor Balancing at 100,000 RPM (Schenck Rig Calibration)', embedUrl: 'https://www.youtube-nocookie.com/embed/5mGhWcKzDTo' })"
-                                    class="inline-flex items-center gap-1.5 font-bold text-red-600 dark:text-red-400 hover:underline cursor-pointer">
+                            <a href="{{ route('project.details', ['slug' => 'marine-vessel-turbocharger-overhaul']) }}"
+                               class="inline-flex items-center gap-1.5 font-bold text-red-600 dark:text-red-400 hover:underline">
                                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                                <span>Watch Full (YouTube)</span>
-                            </button>
-                            <a href="{{ route('services') }}#balancing" class="font-bold text-[#013d5a] dark:text-cyan-400 hover:underline">
-                                Balancing Service &rarr;
+                                <span>Watch Video &amp; Case Study &rarr;</span>
+                            </a>
+                            <a href="{{ route('services') }}#balancing" class="font-bold text-[#003C58] dark:text-cyan-400 hover:underline">
+                                Balancing &rarr;
                             </a>
                         </div>
                     </div>
@@ -142,10 +181,10 @@
                 <!-- Video 2 -->
                 <div class="rounded-3xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group"
                      x-data="{ isHovered: false }">
-                    <div class="relative aspect-video bg-black overflow-hidden flex items-center justify-center cursor-pointer"
-                         @mouseenter="isHovered = true; $refs.vid2.play()"
-                         @mouseleave="isHovered = false; $refs.vid2.pause(); $refs.vid2.currentTime = 0"
-                         @click="$dispatch('open-video-modal', { title: 'Emergency Vessel Boarding at Chattogram Outer Anchorage', embedUrl: 'https://www.youtube-nocookie.com/embed/X9cW23sT1tU' })">
+                    <a href="{{ route('project.details', ['slug' => 'emergency-anchorage-flying-squad']) }}"
+                       class="relative aspect-video bg-slate-100 dark:bg-black overflow-hidden flex items-center justify-center cursor-pointer block"
+                       @mouseenter="isHovered = true; $refs.vid2.play()"
+                       @mouseleave="isHovered = false; $refs.vid2.pause(); $refs.vid2.currentTime = 0">
                         
                         <video x-ref="vid2" loop muted playsinline preload="metadata" 
                                class="w-full h-full object-cover">
@@ -157,31 +196,34 @@
                              x-show="!isHovered"
                              class="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none transition-opacity duration-150" />
 
-                        <div x-show="!isHovered" class="absolute inset-0 bg-slate-950/25 flex items-center justify-center transition-opacity pointer-events-none z-20">
-                            <div class="w-12 h-12 rounded-full bg-white/95 text-[#013d5a] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <div x-show="!isHovered" class="absolute inset-0 bg-slate-900/15 dark:bg-black/40 flex items-center justify-center transition-opacity pointer-events-none z-20">
+                            <div class="w-12 h-12 rounded-full bg-white/95 text-[#003C58] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                 <x-icon name="solid:play" class="w-4 h-4 translate-x-0.5" />
                             </div>
                         </div>
 
-                        <div class="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/75 text-[10px] font-mono text-white pointer-events-none z-20">
+                        <div class="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-white/95 dark:bg-black/80 text-[10px] font-mono font-medium text-slate-800 dark:text-white border border-slate-200/80 dark:border-transparent shadow-sm pointer-events-none z-20">
                             0:32 HD &bull; Hover to Preview
                         </div>
-                    </div>
+                    </a>
                     <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
                         <div class="space-y-1.5">
-                            <span class="text-[10px] font-bold text-[#013d5a] dark:text-cyan-400 uppercase tracking-widest">Port Logistics</span>
-                            <h4 class="text-sm font-bold font-heading text-slate-900 dark:text-white">Emergency Vessel Boarding at Chattogram Outer Anchorage</h4>
+                            <span class="text-[10px] font-bold text-[#003C58] dark:text-cyan-400 uppercase tracking-widest">Port Logistics</span>
+                            <h4 class="text-sm font-bold font-heading text-slate-900 dark:text-white">
+                                <a href="{{ route('project.details', ['slug' => 'emergency-anchorage-flying-squad']) }}" class="hover:text-[#003C58] dark:hover:text-cyan-400 transition-colors">
+                                    Emergency Vessel Boarding at Chattogram Outer Anchorage
+                                </a>
+                            </h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400">24/7 flying squad mobilization with mobile extraction tooling.</p>
                         </div>
                         <div class="pt-3 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs">
-                            <button type="button" 
-                                    @click="$dispatch('open-video-modal', { title: 'Emergency Vessel Boarding at Chattogram Outer Anchorage', embedUrl: 'https://www.youtube-nocookie.com/embed/X9cW23sT1tU' })"
-                                    class="inline-flex items-center gap-1.5 font-bold text-red-600 dark:text-red-400 hover:underline cursor-pointer">
+                            <a href="{{ route('project.details', ['slug' => 'emergency-anchorage-flying-squad']) }}"
+                               class="inline-flex items-center gap-1.5 font-bold text-red-600 dark:text-red-400 hover:underline">
                                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                                <span>Watch Full (YouTube)</span>
-                            </button>
-                            <a href="{{ route('projects') }}#projects" class="font-bold text-[#013d5a] dark:text-cyan-400 hover:underline">
-                                Port Projects &rarr;
+                                <span>Watch Video &amp; Case Study &rarr;</span>
+                            </a>
+                            <a href="{{ route('projects') }}#projects" class="font-bold text-[#003C58] dark:text-cyan-400 hover:underline">
+                                Port Details &rarr;
                             </a>
                         </div>
                     </div>
@@ -190,10 +232,10 @@
                 <!-- Video 3 -->
                 <div class="rounded-3xl bg-slate-50 dark:bg-[#0b1b2b] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group"
                      x-data="{ isHovered: false }">
-                    <div class="relative aspect-video bg-black overflow-hidden flex items-center justify-center cursor-pointer"
-                         @mouseenter="isHovered = true; $refs.vid3.play()"
-                         @mouseleave="isHovered = false; $refs.vid3.pause(); $refs.vid3.currentTime = 0"
-                         @click="$dispatch('open-video-modal', { title: 'Precision Micro-TIG Turbine Blade Reconstruction', embedUrl: 'https://www.youtube-nocookie.com/embed/bXQeM_6rVMo' })">
+                    <a href="{{ route('project.details', ['slug' => 'industrial-power-plant-balancing']) }}"
+                       class="relative aspect-video bg-slate-100 dark:bg-black overflow-hidden flex items-center justify-center cursor-pointer block"
+                       @mouseenter="isHovered = true; $refs.vid3.play()"
+                       @mouseleave="isHovered = false; $refs.vid3.pause(); $refs.vid3.currentTime = 0">
                         
                         <video x-ref="vid3" loop muted playsinline preload="metadata" 
                                class="w-full h-full object-cover">
@@ -205,31 +247,34 @@
                              x-show="!isHovered"
                              class="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none transition-opacity duration-150" />
 
-                        <div x-show="!isHovered" class="absolute inset-0 bg-slate-950/25 flex items-center justify-center transition-opacity pointer-events-none z-20">
-                            <div class="w-12 h-12 rounded-full bg-white/95 text-[#013d5a] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <div x-show="!isHovered" class="absolute inset-0 bg-slate-900/15 dark:bg-black/40 flex items-center justify-center transition-opacity pointer-events-none z-20">
+                            <div class="w-12 h-12 rounded-full bg-white/95 text-[#003C58] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                                 <x-icon name="solid:play" class="w-4 h-4 translate-x-0.5" />
                             </div>
                         </div>
 
-                        <div class="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-black/75 text-[10px] font-mono text-white pointer-events-none z-20">
+                        <div class="absolute bottom-3 right-3 px-2 py-0.5 rounded bg-white/95 dark:bg-black/80 text-[10px] font-mono font-medium text-slate-800 dark:text-white border border-slate-200/80 dark:border-transparent shadow-sm pointer-events-none z-20">
                             0:18 HD &bull; Hover to Preview
                         </div>
-                    </div>
+                    </a>
                     <div class="p-5 space-y-3 flex-1 flex flex-col justify-between">
                         <div class="space-y-1.5">
-                            <span class="text-[10px] font-bold text-[#013d5a] dark:text-cyan-400 uppercase tracking-widest">Metallurgical Restoration</span>
-                            <h4 class="text-sm font-bold font-heading text-slate-900 dark:text-white">Micro-TIG Turbine Blade Reconstruction</h4>
+                            <span class="text-[10px] font-bold text-[#003C58] dark:text-cyan-400 uppercase tracking-widest">Metallurgical Restoration</span>
+                            <h4 class="text-sm font-bold font-heading text-slate-900 dark:text-white">
+                                <a href="{{ route('project.details', ['slug' => 'industrial-power-plant-balancing']) }}" class="hover:text-[#003C58] dark:hover:text-cyan-400 transition-colors">
+                                    Micro-TIG Turbine Blade Reconstruction
+                                </a>
+                            </h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400">Laser-aligned profiling of high-temperature Nimonic blades.</p>
                         </div>
                         <div class="pt-3 border-t border-slate-200/80 dark:border-slate-800 flex items-center justify-between text-xs">
-                            <button type="button" 
-                                    @click="$dispatch('open-video-modal', { title: 'Precision Micro-TIG Turbine Blade Reconstruction', embedUrl: 'https://www.youtube-nocookie.com/embed/bXQeM_6rVMo' })"
-                                    class="inline-flex items-center gap-1.5 font-bold text-red-600 dark:text-red-400 hover:underline cursor-pointer">
+                            <a href="{{ route('project.details', ['slug' => 'industrial-power-plant-balancing']) }}"
+                               class="inline-flex items-center gap-1.5 font-bold text-red-600 dark:text-red-400 hover:underline">
                                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                                <span>Watch Full (YouTube)</span>
-                            </button>
-                            <a href="{{ route('services') }}#overhaul" class="font-bold text-[#013d5a] dark:text-cyan-400 hover:underline">
-                                Welding Service &rarr;
+                                <span>Watch Video &amp; Case Study &rarr;</span>
+                            </a>
+                            <a href="{{ route('services') }}#overhaul" class="font-bold text-[#003C58] dark:text-cyan-400 hover:underline">
+                                Welding &rarr;
                             </a>
                         </div>
                     </div>
@@ -242,7 +287,7 @@
     <section id="photos" class="py-20 bg-slate-50 dark:bg-[#06121d] transition-colors">
         <div class="max-w-[1536px] mx-auto px-4 sm:px-8 space-y-12">
             <div class="text-center max-w-2xl mx-auto space-y-2">
-                <span class="text-xs font-bold uppercase tracking-wider text-[#013d5a] dark:text-cyan-400">Facilities</span>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#003C58] dark:text-cyan-400">Facilities</span>
                 <h2 class="text-2xl sm:text-3xl font-extrabold font-heading text-slate-900 dark:text-white">Photo Gallery &amp; Workshops</h2>
                 <p class="text-xs text-slate-500">Click any photograph to view high-resolution facility inspection.</p>
             </div>

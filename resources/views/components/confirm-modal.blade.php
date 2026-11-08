@@ -70,7 +70,7 @@
                      :class="{
                          'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20': type === 'danger',
                          'bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20': type === 'warning',
-                         'bg-[#013d5a]/10 text-[#013d5a] dark:text-cyan-400 border border-[#013d5a]/20': type === 'info'
+                         'bg-[#003C58]/10 text-[#003C58] dark:text-cyan-400 border border-[#003C58]/20': type === 'info'
                      }">
                     
                     <template x-if="type === 'danger'">
@@ -103,7 +103,7 @@
                         :class="{
                             'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-500/20': type === 'danger',
                             'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-500/20': type === 'warning',
-                            'bg-[#013d5a] hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 text-white': type === 'info'
+                            'bg-[#003C58] hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 text-white': type === 'info'
                         }"
                         class="px-4 py-2 rounded-xl text-xs font-bold shadow-sm transition-all active:scale-95 cursor-pointer flex items-center gap-1.5">
                     <span x-text="confirmButtonText"></span>

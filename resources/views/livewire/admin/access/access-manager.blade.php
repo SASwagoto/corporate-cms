@@ -11,14 +11,14 @@
 
         @if($activeTab === 'users')
             <button wire:click="openCreateUserModal"
-                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer">
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer">
                 <x-icon name="solid:user-plus" class="w-3.5 h-3.5" />
                 <span>Add Administrator</span>
             </button>
         @else
             @if($selectedRoleName !== 'Super Administrator')
                 <button wire:click="saveRolePermissions" wire:loading.attr="disabled"
-                    class="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer disabled:opacity-50">
+                    class="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer disabled:opacity-50">
                     <span wire:loading.remove wire:target="saveRolePermissions">Save Permissions</span>
                     <span wire:loading wire:target="saveRolePermissions">Saving...</span>
                 </button>
@@ -43,13 +43,13 @@
     <!-- Main Studio Tabs -->
     <div class="flex items-center gap-1.5 p-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 w-fit mb-5 shadow-2xs">
         <button wire:click="setTab('users')"
-            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-2 {{ $activeTab === 'users' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950 shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white' }}">
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-2 {{ $activeTab === 'users' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950 shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white' }}">
             <x-icon name="solid:users" class="w-3.5 h-3.5" />
             <span>Administrative Users</span>
         </button>
 
         <button wire:click="setTab('roles')"
-            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-2 {{ $activeTab === 'roles' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950 shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white' }}">
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer flex items-center gap-2 {{ $activeTab === 'roles' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950 shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white' }}">
             <x-icon name="solid:shield-halved" class="w-3.5 h-3.5" />
             <span>Roles & Permissions Matrix</span>
         </button>
@@ -73,7 +73,7 @@
                             <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 transition-colors">
                                 <td class="py-3 px-5">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-8 h-8 rounded-xl bg-[#013d5a]/10 dark:bg-cyan-500/10 text-[#013d5a] dark:text-cyan-400 font-bold text-xs flex items-center justify-center shrink-0">
+                                        <div class="w-8 h-8 rounded-xl bg-[#003C58]/10 dark:bg-cyan-500/10 text-[#003C58] dark:text-cyan-400 font-bold text-xs flex items-center justify-center shrink-0">
                                             {{ substr($user->name, 0, 2) }}
                                         </div>
                                         <div>
@@ -84,7 +84,7 @@
                                 </td>
                                 <td class="py-3 px-5">
                                     @foreach($user->roles as $role)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#013d5a]/10 text-[#013d5a] dark:bg-cyan-500/10 dark:text-cyan-400 border border-[#013d5a]/20">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-[#003C58]/10 text-[#003C58] dark:bg-cyan-500/10 dark:text-cyan-400 border border-[#003C58]/20">
                                             {{ $role->name }}
                                         </span>
                                     @endforeach
@@ -133,7 +133,7 @@
                 <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1 block mb-1">Select Role</span>
                 @foreach($roles as $role)
                     <button type="button" wire:click="selectRole({{ $role->id }})"
-                        class="w-full px-3 py-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between {{ $selectedRoleId === $role->id ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950 border-[#013d5a]' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50' }}">
+                        class="w-full px-3 py-2.5 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between {{ $selectedRoleId === $role->id ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950 border-[#003C58]' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50' }}">
                         <div class="truncate">
                             <p class="font-bold text-xs truncate">{{ $role->name }}</p>
                             <p class="text-[10px] opacity-75">{{ $role->users_count }} Assigned</p>
@@ -167,10 +167,10 @@
                                 
                                 <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2 mb-2.5">
                                     <h4 class="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-[#013d5a] dark:bg-cyan-400"></span>
+                                        <span class="w-1.5 h-1.5 rounded-full bg-[#003C58] dark:bg-cyan-400"></span>
                                         <span>{{ $groupName }}</span>
                                     </h4>
-                                    <button type="button" wire:click="toggleAllGroup('{{ $groupName }}')" class="text-[10px] font-bold text-[#013d5a] dark:text-cyan-400 hover:underline cursor-pointer">
+                                    <button type="button" wire:click="toggleAllGroup('{{ $groupName }}')" class="text-[10px] font-bold text-[#003C58] dark:text-cyan-400 hover:underline cursor-pointer">
                                         Toggle All
                                     </button>
                                 </div>
@@ -182,7 +182,7 @@
                                             <input type="checkbox" 
                                                    wire:model="rolePermissions" 
                                                    value="{{ $permKey }}"
-                                                   class="w-3.5 h-3.5 rounded border-slate-300 dark:border-slate-700 text-[#013d5a] focus:ring-[#013d5a]/20" />
+                                                   class="w-3.5 h-3.5 rounded border-slate-300 dark:border-slate-700 text-[#003C58] focus:ring-[#003C58]/20" />
                                             <span class="text-[11px] font-medium text-slate-700 dark:text-slate-300 truncate" title="{{ $permKey }}">{{ $permLabel }}</span>
                                         </label>
                                     @endforeach
@@ -216,13 +216,13 @@
                 <form wire:submit="saveUser" class="space-y-3.5 pt-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
-                        <input type="text" wire:model="name" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]" />
+                        <input type="text" wire:model="name" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
                         @error('name') <span class="text-rose-500 text-[10px] block mt-1">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
-                        <input type="email" wire:model="email" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]" />
+                        <input type="email" wire:model="email" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
                         @error('email') <span class="text-rose-500 text-[10px] block mt-1">{{ $message }}</span> @enderror
                     </div>
 
@@ -230,13 +230,13 @@
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                             Password {{ $editingUserId ? '(Leave blank to keep unchanged)' : '' }}
                         </label>
-                        <input type="password" wire:model="password" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]" />
+                        <input type="password" wire:model="password" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
                         @error('password') <span class="text-rose-500 text-[10px] block mt-1">{{ $message }}</span> @enderror
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Assigned Role</label>
-                        <select wire:model="selectedRole" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]">
+                        <select wire:model="selectedRole" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]">
                             @foreach($roles as $role)
                                 <option value="{{ $role->name }}">{{ $role->name }}</option>
                             @endforeach
@@ -247,7 +247,7 @@
                         <button type="button" wire:click="$set('showUserModal', false)" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
                             Cancel
                         </button>
-                        <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 cursor-pointer">
+                        <button type="submit" class="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 cursor-pointer">
                             Save Account
                         </button>
                     </div>

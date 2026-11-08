@@ -154,19 +154,19 @@
             <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <div class="flex items-center gap-1.5 p-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold">
                     <button type="button" @click="activeTab = 'library'"
-                        :class="activeTab === 'library' ? 'bg-white dark:bg-slate-900 text-[#013d5a] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
+                        :class="activeTab === 'library' ? 'bg-white dark:bg-slate-900 text-[#003C58] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
                         class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-2">
                         <span>FontAwesome</span>
                         <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200 dark:bg-slate-800" x-text="faIcons.length || '...'"></span>
                     </button>
                     <button type="button" @click="activeTab = 'custom'"
-                        :class="activeTab === 'custom' ? 'bg-white dark:bg-slate-900 text-[#013d5a] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
+                        :class="activeTab === 'custom' ? 'bg-white dark:bg-slate-900 text-[#003C58] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
                         class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-2">
                         <span>Saved Icons</span>
                         <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" x-text="customIcons.length"></span>
                     </button>
                     <button type="button" @click="activeTab = 'raw_svg'"
-                        :class="activeTab === 'raw_svg' ? 'bg-white dark:bg-slate-900 text-[#013d5a] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
+                        :class="activeTab === 'raw_svg' ? 'bg-white dark:bg-slate-900 text-[#003C58] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
                         class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-2">
                         <span>Paste SVG</span>
                     </button>
@@ -185,27 +185,27 @@
                                x-model="searchQuery"
                                type="text" 
                                placeholder="Search icons (e.g. linkedin, ship, gear)..." 
-                               class="w-full px-3 py-1.5 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#013d5a] dark:focus:ring-cyan-500" />
+                               class="w-full px-3 py-1.5 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#003C58] dark:focus:ring-cyan-500" />
                     </div>
 
                     <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
                         <button type="button" @click="selectedCategory = 'all'"
-                            :class="selectedCategory === 'all' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
+                            :class="selectedCategory === 'all' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             All
                         </button>
                         <button type="button" @click="selectedCategory = 'brands'"
-                            :class="selectedCategory === 'brands' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
+                            :class="selectedCategory === 'brands' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             Brands
                         </button>
                         <button type="button" @click="selectedCategory = 'solid'"
-                            :class="selectedCategory === 'solid' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
+                            :class="selectedCategory === 'solid' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             Solid
                         </button>
                         <button type="button" @click="selectedCategory = 'regular'"
-                            :class="selectedCategory === 'regular' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
+                            :class="selectedCategory === 'regular' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             Regular
                         </button>
@@ -214,7 +214,7 @@
 
                 <!-- Loading State inside Modal -->
                 <div x-show="isLoadingIcons" class="py-20 text-center text-xs text-slate-400">
-                    <svg class="animate-spin h-6 w-6 text-[#013d5a] dark:text-cyan-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24">
+                    <svg class="animate-spin h-6 w-6 text-[#003C58] dark:text-cyan-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
@@ -227,7 +227,7 @@
                         <template x-for="icon in filteredFaIcons.slice(0, limit)" :key="icon.id">
                             <button type="button"
                                     @click="selectIcon(icon.id)"
-                                    class="flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 hover:border-[#013d5a] dark:hover:border-cyan-400 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all group cursor-pointer shadow-2xs">
+                                    class="flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 hover:border-[#003C58] dark:hover:border-cyan-400 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all group cursor-pointer shadow-2xs">
                                 
                                 <div class="w-6 h-6 flex items-center justify-center mb-1.5 transition-transform group-hover:scale-120">
                                     <img :src="'/' + icon.url" :alt="icon.name" loading="lazy" class="w-5 h-5 object-contain dark:invert transition-all" />
@@ -266,7 +266,7 @@
                                 <input type="text" 
                                        wire:model="modalCustomIconTitle"
                                        placeholder="Name (e.g. Turbine Badge)" 
-                                       class="w-full sm:w-60 px-3 py-1.5 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]" />
+                                       class="w-full sm:w-60 px-3 py-1.5 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
                             </div>
                             <input type="file" 
                                    wire:model="modalUploadedFile" 
@@ -289,7 +289,7 @@
                         wire:click="uploadCustomIcon"
                         wire:loading.attr="disabled"
                         :disabled="!customFileSelected"
-                        class="w-full md:w-auto px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
+                        class="w-full md:w-auto px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
                         <span wire:loading.remove wire:target="uploadCustomIcon">Upload & Save</span>
                         <span wire:loading wire:target="uploadCustomIcon">Saving...</span>
                     </button>
@@ -306,7 +306,7 @@
                             <div class="relative group">
                                 <button type="button"
                                         @click="selectIcon(icon.path || icon.id)"
-                                        class="w-full flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 hover:border-[#013d5a] dark:hover:border-cyan-400 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer shadow-2xs">
+                                        class="w-full flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 hover:border-[#003C58] dark:hover:border-cyan-400 bg-white dark:bg-slate-950 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer shadow-2xs">
                                     
                                     <div class="w-8 h-8 flex items-center justify-center mb-1.5 transition-transform group-hover:scale-115">
                                         <template x-if="icon.is_raw_svg && icon.raw_svg">
@@ -352,7 +352,7 @@
                         <input type="text" 
                                wire:model="modalCustomIconTitle" 
                                placeholder="e.g. Custom Nordroy Symbol" 
-                               class="w-full sm:w-80 px-3 py-2 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]" />
+                               class="w-full sm:w-80 px-3 py-2 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
                     </div>
 
                     <div>
@@ -360,14 +360,14 @@
                         <textarea wire:model="modalRawSvgCode" 
                                   rows="6" 
                                   placeholder="<svg viewBox='0 0 24 24'> ... </svg>" 
-                                  class="w-full px-3 py-2 text-xs font-mono rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]"></textarea>
+                                  class="w-full px-3 py-2 text-xs font-mono rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]"></textarea>
                         @error('modalRawSvgCode') <span class="text-rose-500 text-xs block mt-1">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="flex justify-end pt-2">
                         <button type="button" 
                                 wire:click="saveRawSvgIcon"
-                                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm cursor-pointer">
+                                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm cursor-pointer">
                             Store Vector & Use Icon
                         </button>
                     </div>

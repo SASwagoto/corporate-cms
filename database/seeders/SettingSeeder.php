@@ -20,9 +20,19 @@ class SettingSeeder extends Seeder
             ['group' => 'auth', 'key' => 'auth_headline', 'value' => 'Marine & Power Engineering Platform', 'type' => 'text'],
             ['group' => 'auth', 'key' => 'auth_tagline', 'value' => 'Authorized portal for marine engineers, turbine specialists, and administrative leadership.', 'type' => 'text'],
             
-            // Industrial Brand Palette (Nordroy Marine Navy)
-            ['group' => 'theme', 'key' => 'theme_primary_color', 'value' => '#013d5a', 'type' => 'text'],
-            ['group' => 'theme', 'key' => 'theme_accent_color', 'value' => '#6f7478', 'type' => 'text'],
+            // Industrial Brand Palette (Official Logo Brand Colors: #003C58 & #75767A)
+            ['group' => 'theme', 'key' => 'theme_primary_color', 'value' => '#003C58', 'type' => 'text'],
+            ['group' => 'theme', 'key' => 'theme_secondary_color', 'value' => '#75767A', 'type' => 'text'],
+            ['group' => 'theme', 'key' => 'theme_accent_color', 'value' => '#0ea5e9', 'type' => 'text'],
+            ['group' => 'theme', 'key' => 'theme_surface_light', 'value' => '#ffffff', 'type' => 'text'],
+            ['group' => 'theme', 'key' => 'theme_surface_dark', 'value' => '#07131e', 'type' => 'text'],
+
+            // Background Video & Presentation Defaults
+            ['group' => 'theme', 'key' => 'site_bg_video_enabled', 'value' => '1', 'type' => 'text'],
+            ['group' => 'theme', 'key' => 'site_bg_video_url', 'value' => 'assets/videos/background-marine.mp4', 'type' => 'text'],
+            ['group' => 'theme', 'key' => 'site_bg_video_opacity', 'value' => '85', 'type' => 'text'],
+            ['group' => 'theme', 'key' => 'theme_hero_backdrop', 'value' => 'frosted', 'type' => 'text'],
+            ['group' => 'theme', 'key' => 'theme_video_break_enabled', 'value' => '1', 'type' => 'text'],
         ];
 
         foreach ($settings as $setting) {

@@ -14,7 +14,7 @@
         <!-- Directly Opens Upload Mode Modal -->
         <button type="button" 
             @click="$dispatch('open-media-picker', { uploadOnly: true })"
-            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer shrink-0 self-start sm:self-auto">
+            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer shrink-0 self-start sm:self-auto">
             <x-icon name="solid:cloud-arrow-up" class="w-4 h-4" />
             <span>Upload Assets</span>
         </button>
@@ -37,7 +37,7 @@
         <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full md:w-auto pb-1 md:pb-0">
             @foreach(['all' => 'All Assets', 'general' => 'General', 'banners' => 'Hero Banners', 'services' => 'Services', 'products' => 'Products', 'branding' => 'Logos & Brand'] as $fKey => $fTitle)
                 <button type="button" wire:click="setFolder('{{ $fKey }}')"
-                    class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0 {{ $selectedFolder === $fKey ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950 shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white bg-slate-50 dark:bg-slate-950/60' }}">
+                    class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer shrink-0 {{ $selectedFolder === $fKey ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950 shadow-xs' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white bg-slate-50 dark:bg-slate-950/60' }}">
                     {{ $fTitle }}
                 </button>
             @endforeach
@@ -47,7 +47,7 @@
             <input type="text" 
                    wire:model.live.debounce.300ms="search" 
                    placeholder="Search by title or filename..." 
-                   class="w-full px-3.5 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#013d5a]" />
+                   class="w-full px-3.5 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
         </div>
 
     </div>
@@ -56,7 +56,7 @@
     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3">
         @forelse($assets as $asset)
             <div wire:key="media-item-{{ $asset->id }}" 
-                 class="relative group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 overflow-hidden bg-white dark:bg-slate-900 shadow-2xs hover:border-[#013d5a] dark:hover:border-cyan-400 transition-all cursor-pointer">
+                 class="relative group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 overflow-hidden bg-white dark:bg-slate-900 shadow-2xs hover:border-[#003C58] dark:hover:border-cyan-400 transition-all cursor-pointer">
                 
                 <!-- Fixed Aspect-Square Box for Identical Dimensions -->
                 <div wire:click="openAssetDetails({{ $asset->id }})" class="aspect-square w-full bg-slate-100 dark:bg-slate-950 flex items-center justify-center p-2 overflow-hidden">
@@ -144,7 +144,7 @@
                                         copied = true;
                                         setTimeout(() => copied = false, 2000);
                                     "
-                                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950 shrink-0 cursor-pointer flex items-center gap-1.5">
+                                    class="px-3 py-1.5 rounded-lg text-xs font-bold bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950 shrink-0 cursor-pointer flex items-center gap-1.5">
                                 <span x-show="!copied">Copy</span>
                                 <span x-show="copied" style="display: none;">Copied!</span>
                             </button>
@@ -168,7 +168,7 @@
                         <form wire:submit="saveAssetMetadata" class="space-y-4 pt-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Asset Title / Name</label>
-                                <input type="text" wire:model="editTitle" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]" />
+                                <input type="text" wire:model="editTitle" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
                             </div>
 
                             <div>
@@ -176,12 +176,12 @@
                                     <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">Image Alt Text (SEO)</label>
                                     <span class="text-[10px] text-emerald-600 dark:text-cyan-400 font-medium">Search Ranking Factor</span>
                                 </div>
-                                <input type="text" wire:model="editAlt" placeholder="Brief visual description for search engines & accessibility" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]" />
+                                <input type="text" wire:model="editAlt" placeholder="Brief visual description for search engines & accessibility" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
                             </div>
 
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Caption / Description</label>
-                                <textarea wire:model="editCaption" rows="2" placeholder="Optional caption or technical notes" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#013d5a]"></textarea>
+                                <textarea wire:model="editCaption" rows="2" placeholder="Optional caption or technical notes" class="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]"></textarea>
                             </div>
                         </form>
                     </div>
@@ -197,7 +197,7 @@
                             <button type="button" wire:click="$set('showDetailsModal', false)" class="px-3.5 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl cursor-pointer">
                                 Cancel
                             </button>
-                            <button type="button" wire:click="saveAssetMetadata" class="px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm cursor-pointer">
+                            <button type="button" wire:click="saveAssetMetadata" class="px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm cursor-pointer">
                                 Save SEO Meta
                             </button>
                         </div>

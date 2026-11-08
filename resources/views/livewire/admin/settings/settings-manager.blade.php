@@ -14,7 +14,7 @@
         </div>
 
         <button wire:click="saveSettings" wire:loading.attr="disabled"
-            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer disabled:opacity-50 shrink-0 self-start sm:self-auto">
+            class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer disabled:opacity-50 shrink-0 self-start sm:self-auto">
             <span wire:loading.remove wire:target="saveSettings">Save Changes</span>
             <span wire:loading wire:target="saveSettings" class="flex items-center gap-2">
                 <svg class="animate-spin h-3.5 w-3.5 text-current" fill="none" viewBox="0 0 24 24">
@@ -45,42 +45,42 @@
             <nav class="flex lg:flex-col overflow-x-auto no-scrollbar gap-1 p-1.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-xs">
                 
                 <button type="button" @click="currentTab = 'general'"
-                    :class="currentTab === 'general' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                    :class="currentTab === 'general' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
                     class="shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left whitespace-nowrap cursor-pointer">
                     <x-icon name="solid:building" class="w-4 h-4 shrink-0" />
                     <span>General & Identity</span>
                 </button>
 
                 <button type="button" @click="currentTab = 'branding'"
-                    :class="currentTab === 'branding' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                    :class="currentTab === 'branding' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
                     class="shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left whitespace-nowrap cursor-pointer">
                     <x-icon name="solid:palette" class="w-4 h-4 shrink-0" />
                     <span>Brand Assets</span>
                 </button>
 
                 <button type="button" @click="currentTab = 'storage'"
-                    :class="currentTab === 'storage' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                    :class="currentTab === 'storage' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
                     class="shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left whitespace-nowrap cursor-pointer">
                     <x-icon name="solid:server" class="w-4 h-4 shrink-0" />
                     <span>Storage Engine</span>
                 </button>
 
                 <button type="button" @click="currentTab = 'localization'"
-                    :class="currentTab === 'localization' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                    :class="currentTab === 'localization' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
                     class="shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left whitespace-nowrap cursor-pointer">
                     <x-icon name="solid:clock" class="w-4 h-4 shrink-0" />
                     <span>Timezone & Formats</span>
                 </button>
 
                 <button type="button" @click="currentTab = 'social'"
-                    :class="currentTab === 'social' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                    :class="currentTab === 'social' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
                     class="shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left whitespace-nowrap cursor-pointer">
                     <x-icon name="solid:share-nodes" class="w-4 h-4 shrink-0" />
                     <span>Social Presence</span>
                 </button>
 
                 <button type="button" @click="currentTab = 'scripts'"
-                    :class="currentTab === 'scripts' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                    :class="currentTab === 'scripts' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
                     class="shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold transition-colors text-left whitespace-nowrap cursor-pointer">
                     <x-icon name="solid:code" class="w-4 h-4 shrink-0" />
                     <span>Custom Scripts</span>
@@ -100,37 +100,37 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Platform Brand Name</label>
-                            <input wire:model="settings.site_name" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                            <input wire:model="settings.site_name" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Corporate Tagline</label>
-                            <input wire:model="settings.site_tagline" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                            <input wire:model="settings.site_tagline" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Official Corporate Email</label>
-                            <input wire:model="settings.contact_email" type="email" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                            <input wire:model="settings.contact_email" type="email" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Direct Hotline</label>
-                            <input wire:model="settings.contact_phone" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                            <input wire:model="settings.contact_phone" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                         </div>
                         <div class="sm:col-span-2 xl:col-span-1">
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">WhatsApp Hotline</label>
-                            <input wire:model="settings.whatsapp_number" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                            <input wire:model="settings.whatsapp_number" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Company Physical Address</label>
-                        <textarea wire:model="settings.company_address" rows="2" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none"></textarea>
+                        <textarea wire:model="settings.company_address" rows="2" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none"></textarea>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Google Maps Embed URL</label>
-                        <input wire:model="settings.google_maps_embed" type="text" placeholder="https://www.google.com/maps/embed?..." class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                        <input wire:model="settings.google_maps_embed" type="text" placeholder="https://www.google.com/maps/embed?..." class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                     </div>
                 </div>
 
@@ -148,7 +148,7 @@
                             <div>
                                 <div class="flex items-center justify-between gap-2 mb-1">
                                     <span class="block text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">Corporate Primary Logo</span>
-                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[#013d5a]/10 dark:bg-cyan-500/10 text-[#013d5a] dark:text-cyan-400 border border-[#013d5a]/20">
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[#003C58]/10 dark:bg-cyan-500/10 text-[#003C58] dark:text-cyan-400 border border-[#003C58]/20">
                                         240 × 60 px
                                     </span>
                                 </div>
@@ -165,7 +165,7 @@
                             <div class="flex items-center gap-2 pt-3 border-t border-slate-200/60 dark:border-slate-800">
                                 <button type="button" 
                                     @click="$dispatch('open-media-picker', { targetField: 'site_logo' })"
-                                    class="flex-1 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2">
+                                    class="flex-1 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2">
                                     <x-icon name="solid:images" class="w-3.5 h-3.5" />
                                     <span>Select from Media Library</span>
                                 </button>
@@ -203,7 +203,7 @@
                             <div class="flex items-center gap-2 pt-3 border-t border-slate-200/60 dark:border-slate-800">
                                 <button type="button" 
                                     @click="$dispatch('open-media-picker', { targetField: 'site_icon' })"
-                                    class="flex-1 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2">
+                                    class="flex-1 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2">
                                     <x-icon name="solid:images" class="w-3.5 h-3.5" />
                                     <span>Select from Media Library</span>
                                 </button>
@@ -218,53 +218,6 @@
                         </div>
 
                     </div>
-
-                    <!-- FULL-SITE BACKGROUND VIDEO (Turbo Internacional Style) -->
-                    <div class="mt-6 p-5 rounded-2xl bg-slate-50/70 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                                    <x-icon name="solid:video" class="w-4 h-4 text-[#013d5a] dark:text-cyan-400" />
-                                    <span>Full-Site Background Video (Turbo Internacional Architecture)</span>
-                                </h4>
-                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                                    Plays a subtle, lightweight muted background video behind the entire website over which pages smoothly scroll.
-                                </p>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" wire:model="settings.site_bg_video_enabled" value="1" class="sr-only peer" />
-                                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#013d5a] dark:peer-checked:bg-cyan-500"></div>
-                            </label>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center pt-2">
-                            <div class="md:col-span-8">
-                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Background Video Asset Path or URL</label>
-                                <input wire:model="settings.site_bg_video_url" type="text" placeholder="assets/videos/background-marine.mp4" 
-                                       class="w-full px-3 py-2 rounded-xl text-xs bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
-                            </div>
-                            <div class="md:col-span-4 flex items-end gap-2">
-                                <button type="button" 
-                                    @click="$dispatch('open-media-picker', { targetField: 'site_bg_video_url' })"
-                                    class="w-full px-3 py-2 rounded-xl text-xs font-bold bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 transition-all flex items-center justify-center gap-2">
-                                    <x-icon name="solid:film" class="w-3.5 h-3.5" />
-                                    <span>Select from Media</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Video Opacity Controller -->
-                        <div class="pt-2 border-t border-slate-200/60 dark:border-slate-800/80">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                                    Video Visibility Opacity: <span class="font-mono font-bold text-[#013d5a] dark:text-cyan-400">{{ $settings['site_bg_video_opacity'] ?? 85 }}%</span>
-                                </label>
-                                <span class="text-[11px] text-slate-400">Controls clarity through transparent sections</span>
-                            </div>
-                            <input type="range" min="10" max="100" step="5" wire:model.live="settings.site_bg_video_opacity" 
-                                   class="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-[#013d5a] dark:accent-cyan-400">
-                        </div>
-                    </div>
                 </div>
 
                 <!-- TAB 3: STORAGE ENGINE -->
@@ -273,7 +226,7 @@
                     
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Active Filesystem Driver</label>
-                        <select wire:model.live="settings.storage_driver" class="w-full md:w-72 px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none">
+                        <select wire:model.live="settings.storage_driver" class="w-full md:w-72 px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none">
                             <option value="public">Local Public Storage</option>
                             <option value="s3">Amazon AWS S3 Bucket</option>
                             <option value="r2">Cloudflare R2 (S3 Compatible)</option>
@@ -284,32 +237,32 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Access Key ID</label>
-                                <input wire:model="settings.s3_key" type="password" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                                <input wire:model="settings.s3_key" type="password" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Secret Access Key</label>
-                                <input wire:model="settings.s3_secret" type="password" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                                <input wire:model="settings.s3_secret" type="password" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Bucket Name</label>
-                                <input wire:model="settings.s3_bucket" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                                <input wire:model="settings.s3_bucket" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Region</label>
-                                <input wire:model="settings.s3_region" type="text" placeholder="auto or us-east-1" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                                <input wire:model="settings.s3_region" type="text" placeholder="auto or us-east-1" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">CDN / Public URL</label>
-                                <input wire:model="settings.s3_cdn_url" type="text" placeholder="https://cdn.nordroy.com" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                                <input wire:model="settings.s3_cdn_url" type="text" placeholder="https://cdn.nordroy.com" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                             </div>
                         </div>
 
                         <div x-show="$wire.settings.storage_driver === 'r2'">
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Cloudflare R2 Endpoint URL</label>
-                            <input wire:model="settings.s3_endpoint" type="text" placeholder="https://<account-id>.r2.cloudflarestorage.com" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                            <input wire:model="settings.s3_endpoint" type="text" placeholder="https://<account-id>.r2.cloudflarestorage.com" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                         </div>
                     </div>
                 </div>
@@ -321,11 +274,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">System Timezone</label>
-                            <input wire:model="settings.default_timezone" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                            <input wire:model="settings.default_timezone" type="text" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Date Format</label>
-                            <select wire:model="settings.date_format" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none">
+                            <select wire:model="settings.date_format" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none">
                                 <option value="d M, Y">15 Mar, 2026 (d M, Y)</option>
                                 <option value="Y-m-d">2026-03-15 (Y-m-d)</option>
                                 <option value="d/m/Y">15/03/2026 (d/m/Y)</option>
@@ -334,7 +287,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Time Format</label>
-                            <select wire:model="settings.time_format" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none">
+                            <select wire:model="settings.time_format" class="w-full px-3 py-2 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none">
                                 <option value="h:i A">12 Hour (06:30 PM)</option>
                                 <option value="H:i">24 Hour (18:30)</option>
                             </select>
@@ -350,7 +303,7 @@
                             <p class="text-[11px] text-slate-400">Click on any icon badge to visually select from the Vector Library.</p>
                         </div>
                         <button type="button" wire:click="addSocialLink"
-                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#013d5a]/10 dark:bg-cyan-500/10 text-[#013d5a] dark:text-cyan-400 hover:bg-[#013d5a] hover:text-white dark:hover:bg-cyan-500 dark:hover:text-slate-950 transition-all cursor-pointer">
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#003C58]/10 dark:bg-cyan-500/10 text-[#003C58] dark:text-cyan-400 hover:bg-[#003C58] hover:text-white dark:hover:bg-cyan-500 dark:hover:text-slate-950 transition-all cursor-pointer">
                             <x-icon name="solid:plus" class="w-3.5 h-3.5" />
                             <span>Add Channel</span>
                         </button>
@@ -364,19 +317,19 @@
                                 <button type="button" 
                                     @click="$dispatch('open-icon-picker', { targetField: 'socialLinks', targetTypeField: 'icon_type', targetIndex: {{ $index }} })"
                                     title="Click to change icon visually from library"
-                                    class="relative w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-[#013d5a] dark:hover:bg-cyan-500 hover:text-white dark:hover:text-slate-950 text-[#013d5a] dark:text-cyan-400 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center shrink-0 transition-all cursor-pointer group/btn shadow-2xs">
+                                    class="relative w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800/80 hover:bg-[#003C58] dark:hover:bg-cyan-500 hover:text-white dark:hover:text-slate-950 text-[#003C58] dark:text-cyan-400 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center shrink-0 transition-all cursor-pointer group/btn shadow-2xs">
                                     <x-icon :name="$link['icon'] ?? 'solid:globe'" class="w-4 h-4" />
                                     <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 flex items-center justify-center text-[8px] opacity-0 group-hover/btn:opacity-100 transition-opacity">✎</span>
                                 </button>
 
                                 <div class="w-full sm:w-44 shrink-0">
                                     <input wire:model="socialLinks.{{ $index }}.title" type="text" placeholder="Platform (e.g. LinkedIn)"
-                                        class="w-full px-3 py-1.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                                        class="w-full px-3 py-1.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                                 </div>
 
                                 <div class="w-full flex-1">
                                     <input wire:model="socialLinks.{{ $index }}.url" type="url" placeholder="https://..."
-                                        class="w-full px-3 py-1.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none" />
+                                        class="w-full px-3 py-1.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
                                 </div>
 
                                 <button type="button" wire:click="removeSocialLink({{ $index }})"
@@ -388,7 +341,7 @@
                             </div>
                         @empty
                             <div class="py-8 text-center text-slate-400 text-xs">
-                                No social channels added yet. Click <button type="button" wire:click="addSocialLink" class="font-bold text-[#013d5a] dark:text-cyan-400 hover:underline">+ Add Channel</button> to begin.
+                                No social channels added yet. Click <button type="button" wire:click="addSocialLink" class="font-bold text-[#003C58] dark:text-cyan-400 hover:underline">+ Add Channel</button> to begin.
                             </div>
                         @endforelse
                     </div>
@@ -400,12 +353,12 @@
                     
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Custom Header Scripts (Inside &lt;head&gt;)</label>
-                        <textarea wire:model="settings.custom_head_scripts" rows="4" placeholder="<!-- Google Analytics, Meta Pixel, etc. -->" class="w-full px-3 py-2 rounded-xl text-xs font-mono bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none"></textarea>
+                        <textarea wire:model="settings.custom_head_scripts" rows="4" placeholder="<!-- Google Analytics, Meta Pixel, etc. -->" class="w-full px-3 py-2 rounded-xl text-xs font-mono bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none"></textarea>
                     </div>
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Custom Footer Scripts (Before &lt;/body&gt;)</label>
-                        <textarea wire:model="settings.custom_footer_scripts" rows="4" placeholder="<!-- Live Chat, Tracking widgets, etc. -->" class="w-full px-3 py-2 rounded-xl text-xs font-mono bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#013d5a]/40 focus:outline-none"></textarea>
+                        <textarea wire:model="settings.custom_footer_scripts" rows="4" placeholder="<!-- Live Chat, Tracking widgets, etc. -->" class="w-full px-3 py-2 rounded-xl text-xs font-mono bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none"></textarea>
                     </div>
                 </div>
 

@@ -129,14 +129,14 @@
                     <template x-if="!isUploadOnly">
                         <div class="flex items-center gap-1 p-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold">
                             <button type="button" @click="activeTab = 'library'"
-                                :class="activeTab === 'library' ? 'bg-white dark:bg-slate-900 text-[#013d5a] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
+                                :class="activeTab === 'library' ? 'bg-white dark:bg-slate-900 text-[#003C58] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
                                 class="px-4 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-2">
                                 <x-icon name="solid:images" class="w-4 h-4" />
                                 <span>Media Library</span>
                                 <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-slate-200 dark:bg-slate-800" x-text="assets.length"></span>
                             </button>
                             <button type="button" @click="activeTab = 'upload'"
-                                :class="activeTab === 'upload' ? 'bg-white dark:bg-slate-900 text-[#013d5a] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
+                                :class="activeTab === 'upload' ? 'bg-white dark:bg-slate-900 text-[#003C58] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
                                 class="px-4 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-2">
                                 <x-icon name="solid:cloud-arrow-up" class="w-4 h-4" />
                                 <span>Upload Files</span>
@@ -146,7 +146,7 @@
                     <template x-if="isUploadOnly">
                         <div>
                             <h3 class="text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
-                                <x-icon name="solid:cloud-arrow-up" class="w-4 h-4 text-[#013d5a] dark:text-cyan-400" />
+                                <x-icon name="solid:cloud-arrow-up" class="w-4 h-4 text-[#003C58] dark:text-cyan-400" />
                                 <span>Upload Media Assets</span>
                             </h3>
                             <p class="text-[11px] text-slate-400">Process photography, PNGs, WebP, SVGs & technical PDFs.</p>
@@ -167,32 +167,32 @@
                         <input type="text" 
                                x-model="searchQuery" 
                                placeholder="Filter assets instantly..." 
-                               class="w-full px-3 py-1.5 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#013d5a] dark:focus:ring-cyan-500" />
+                               class="w-full px-3 py-1.5 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#003C58] dark:focus:ring-cyan-500" />
                     </div>
 
                     <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
                         <button type="button" @click="selectedFolder = 'all'"
-                            :class="selectedFolder === 'all' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
+                            :class="selectedFolder === 'all' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             All Files
                         </button>
                         <button type="button" @click="selectedFolder = 'general'"
-                            :class="selectedFolder === 'general' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
+                            :class="selectedFolder === 'general' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             General
                         </button>
                         <button type="button" @click="selectedFolder = 'banners'"
-                            :class="selectedFolder === 'banners' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
+                            :class="selectedFolder === 'banners' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             Banners
                         </button>
                         <button type="button" @click="selectedFolder = 'services'"
-                            :class="selectedFolder === 'services' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
+                            :class="selectedFolder === 'services' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             Services
                         </button>
                         <button type="button" @click="selectedFolder = 'products'"
-                            :class="selectedFolder === 'products' ? 'bg-[#013d5a] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
+                            :class="selectedFolder === 'products' ? 'bg-[#003C58] text-white dark:bg-cyan-500 dark:text-slate-950' : 'text-slate-500 hover:text-slate-800 dark:hover:text-white'"
                             class="px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer shrink-0">
                             Products
                         </button>
@@ -203,7 +203,7 @@
                 <div class="flex-1 overflow-y-auto p-5 max-h-[55vh]">
                     <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
                         <template x-for="asset in filteredAssets" :key="asset.id">
-                            <div class="relative group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 overflow-hidden bg-white dark:bg-slate-950 hover:border-[#013d5a] dark:hover:border-cyan-400 transition-all shadow-2xs">
+                            <div class="relative group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 overflow-hidden bg-white dark:bg-slate-950 hover:border-[#003C58] dark:hover:border-cyan-400 transition-all shadow-2xs">
                                 
                                 <button type="button" 
                                     @click="selectMedia(asset.id, asset.url)"
@@ -243,7 +243,7 @@
                 
                 <div class="max-w-2xl mx-auto p-6 rounded-3xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/60 flex flex-col items-center justify-center text-center">
                     
-                    <div class="w-12 h-12 rounded-2xl bg-[#013d5a]/10 dark:bg-cyan-500/10 text-[#013d5a] dark:text-cyan-400 flex items-center justify-center mb-3">
+                    <div class="w-12 h-12 rounded-2xl bg-[#003C58]/10 dark:bg-cyan-500/10 text-[#003C58] dark:text-cyan-400 flex items-center justify-center mb-3">
                         <x-icon name="solid:cloud-arrow-up" class="w-6 h-6" />
                     </div>
 
@@ -265,8 +265,8 @@
 
                         <!-- Auto-Compress WebP Switch -->
                         <label class="flex items-center gap-2 cursor-pointer select-none">
-                            <input type="checkbox" wire:model="autoCompress" class="w-3.5 h-3.5 rounded text-[#013d5a] focus:ring-0" />
-                            <span class="text-xs font-bold text-[#013d5a] dark:text-cyan-400">Auto-Compress to WebP (Recommended)</span>
+                            <input type="checkbox" wire:model="autoCompress" class="w-3.5 h-3.5 rounded text-[#003C58] focus:ring-0" />
+                            <span class="text-xs font-bold text-[#003C58] dark:text-cyan-400">Auto-Compress to WebP (Recommended)</span>
                         </label>
                     </div>
 
@@ -283,7 +283,7 @@
                                multiple 
                                accept=".jpg,.jpeg,.png,.webp,.svg,.pdf"
                                @change="handleFileSelect($event)"
-                               class="text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#013d5a] file:text-white hover:file:bg-[#024a6d] file:cursor-pointer" />
+                               class="text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#003C58] file:text-white hover:file:bg-[#024a6d] file:cursor-pointer" />
 
                         <!-- Livewire Async Chunk Upload Progress Bar -->
                         <div x-show="isUploading" class="w-full mt-3 bg-slate-200 dark:bg-slate-800 rounded-full h-1.5 overflow-hidden" style="display: none;">
@@ -320,7 +320,7 @@
                             <button type="button" 
                                 wire:click="uploadFiles"
                                 wire:loading.attr="disabled"
-                                class="px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#013d5a] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer flex items-center gap-2">
+                                class="px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 dark:hover:bg-cyan-400 shadow-sm active:scale-95 transition-all cursor-pointer flex items-center gap-2">
                                 <span wire:loading.remove wire:target="uploadFiles">Upload & Process (<span x-text="previewFiles.length"></span>) Files</span>
                                 <span wire:loading wire:target="uploadFiles">Compressing & Saving...</span>
                             </button>
