@@ -11,6 +11,7 @@
 
         customFileSelected: false,
         customPreviewUrl: null,
+        rawSvgInput: '',
 
         // Lightweight lazy-loaded arrays
         faIcons: [],
@@ -28,6 +29,45 @@
             return list;
         },
 
+        get sanitizedSvgPreview() {
+            if (!this.rawSvgInput || typeof this.rawSvgInput !== 'string') return null;
+            let val = this.rawSvgInput.trim();
+            if (!val.includes('<svg') || !val.includes('</svg>')) return null;
+
+            try {
+                // Strip scripts
+                val = val.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+                // Auto inject viewBox if missing but width/height are specified
+                if (!val.includes('viewBox')) {
+                    const m = val.match(/width=['&quot;]([0-9.]+)['&quot;]\s+height=['&quot;]([0-9.]+)['&quot;]/i);
+                    if (m) {
+                        val = val.replace(/<svg/i, `<svg viewBox='0 0 ${m[1]} ${m[2]}'`);
+                    }
+                }
+                // Strip fixed width and height so Tailwind sizing controls it
+                val = val.replace(/\s*(width|height)=['&quot;][^'&quot;]*['&quot;]/gi, '');
+                return val;
+            } catch(e) {
+                return null;
+            }
+        },
+
+        get isSvgValid() {
+            return this.sanitizedSvgPreview !== null;
+        },
+
+        async pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text && text.includes('<svg')) {
+                    this.rawSvgInput = text;
+                    $wire.set('modalRawSvgCode', text);
+                }
+            } catch(e) {
+                console.warn('Clipboard read permission denied or unavailable:', e);
+            }
+        },
+
         async openPicker(detail) {
             this.targetField = detail.targetField || null;
             this.targetTypeField = detail.targetTypeField || null;
@@ -42,6 +82,7 @@
             this.limit = 48;
             this.customFileSelected = false;
             this.customPreviewUrl = null;
+            this.rawSvgInput = '';
             this.isOpen = true;
 
             // Zero-Bloat Async Fetch with LocalStorage caching
@@ -87,7 +128,7 @@
                 } else if (this.targetIndex !== null) {
                     $wire.set(`${this.targetField}.${this.targetIndex}.icon`, iconId);
                     if (this.targetTypeField) {
-                        const isCustom = iconId.startsWith('storage/') || iconId.startsWith('http');
+                        const isCustom = iconId.startsWith('storage/') || iconId.startsWith('http') || iconId.startsWith('raw_svg:');
                         $wire.set(`${this.targetField}.${this.targetIndex}.${this.targetTypeField}`, isCustom ? 'upload' : 'library');
                         if (isCustom) {
                             $wire.set(`${this.targetField}.${this.targetIndex}.custom_path`, iconId);
@@ -104,6 +145,7 @@
             this.isOpen = false;
             this.customFileSelected = false;
             this.customPreviewUrl = null;
+            this.rawSvgInput = '';
         }
      }"
      @open-icon-picker.window="openPicker($event.detail)"
@@ -116,8 +158,12 @@
             is_raw_svg: $event.detail.isRawSvg,
             raw_svg: $event.detail.rawSvg,
             url: $event.detail.isRawSvg ? null : newUrl
-         });
-        closeModal();
+        });
+        if (targetField) {
+            selectIcon($event.detail.iconPath);
+        } else {
+            closeModal();
+        }
      "
      @custom-icon-deleted.window="
         customIcons = customIcons.filter(i => i.id !== $event.detail.iconId && i.path !== $event.detail.iconPath);
@@ -162,13 +208,14 @@
                     <button type="button" @click="activeTab = 'custom'"
                         :class="activeTab === 'custom' ? 'bg-white dark:bg-slate-900 text-[#003C58] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
                         class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-2">
-                        <span>Saved Icons</span>
+                        <span>Saved &amp; Upload</span>
                         <span class="px-1.5 py-0.2 rounded-full text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" x-text="customIcons.length"></span>
                     </button>
                     <button type="button" @click="activeTab = 'raw_svg'"
                         :class="activeTab === 'raw_svg' ? 'bg-white dark:bg-slate-900 text-[#003C58] dark:text-cyan-400 shadow-xs' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'"
                         class="px-3 py-1.5 rounded-lg transition-colors cursor-pointer flex items-center gap-2">
                         <span>Paste SVG</span>
+                        <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
                     </button>
                 </div>
 
@@ -218,7 +265,7 @@
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span>Instant caching 2,800+ vector icons...</span>
+                    <span>Instant caching vector icons...</span>
                 </div>
 
                 <!-- Visual Grid -->
@@ -247,27 +294,33 @@
                 </div>
             </div>
 
-            <!-- TAB 2: MY CUSTOM ICONS -->
+            <!-- TAB 2: MY CUSTOM ICONS & IMAGE UPLOAD -->
             <div x-show="activeTab === 'custom'" class="flex-1 overflow-y-auto p-6 space-y-6 max-h-[65vh]" style="display: none;">
+                
+                <!-- Upload Box -->
                 <div class="p-5 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row items-center justify-between gap-5">
+                    
                     <div class="flex items-center gap-4 w-full md:w-auto">
-                        <div class="w-14 h-14 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0 shadow-inner overflow-hidden">
+                        <!-- Preview Box -->
+                        <div class="w-16 h-16 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shrink-0 shadow-inner overflow-hidden p-2">
                             <template x-if="customPreviewUrl">
-                                <img :src="customPreviewUrl" class="w-9 h-9 object-contain" />
+                                <img :src="customPreviewUrl" class="w-full h-full object-contain" />
                             </template>
                             <template x-if="!customPreviewUrl">
-                                <x-icon name="solid:cloud-arrow-up" class="w-6 h-6 text-slate-300 dark:text-slate-600" />
+                                <x-icon name="solid:cloud-arrow-up" class="w-7 h-7 text-slate-300 dark:text-slate-600" />
                             </template>
                         </div>
 
                         <div class="space-y-1.5 flex-1">
-                            <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Upload Icon File</h4>
+                            <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Upload Icon Image or Vector</h4>
+                            
                             <div class="flex items-center gap-2">
                                 <input type="text" 
-                                       wire:model="modalCustomIconTitle"
-                                       placeholder="Name (e.g. Turbine Badge)" 
-                                       class="w-full sm:w-60 px-3 py-1.5 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
+                                       wire:model="modalCustomIconTitle" 
+                                       placeholder="Icon Title (e.g. Marine Radar)" 
+                                       class="w-full sm:w-64 px-3 py-1.5 rounded-xl text-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
                             </div>
+
                             <input type="file" 
                                    wire:model="modalUploadedFile" 
                                    @change="
@@ -280,17 +333,30 @@
                                            customPreviewUrl = null;
                                        }
                                    "
-                                   accept=".svg,.png,.webp,.jpg,.ico" 
+                                   accept=".svg,.png,.webp,.jpg,.jpeg,.ico" 
                                    class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-slate-200 dark:file:bg-slate-800 file:text-slate-800 dark:file:text-white cursor-pointer" />
+
+                            <!-- Uploading Status Indicator -->
+                            <div wire:loading wire:target="modalUploadedFile" class="text-xs text-amber-600 dark:text-amber-400 font-semibold inline-flex items-center gap-1.5">
+                                <svg class="animate-spin h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                <span>Uploading file to server...</span>
+                            </div>
+
+                            @error('modalUploadedFile')
+                                <span class="text-rose-500 text-xs font-semibold block mt-1">{{ $message }}</span>
+                            @enderror
+                            @error('modalCustomIconTitle')
+                                <span class="text-rose-500 text-xs font-semibold block mt-1">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
                     <button type="button" 
-                        wire:click="uploadCustomIcon"
+                        wire:click="uploadCustomIcon(targetField, targetIndex, targetTypeField)"
                         wire:loading.attr="disabled"
                         :disabled="!customFileSelected"
                         class="w-full md:w-auto px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
-                        <span wire:loading.remove wire:target="uploadCustomIcon" class="inline-flex items-center gap-2 whitespace-nowrap">Upload & Save</span>
+                        <span wire:loading.remove wire:target="uploadCustomIcon" class="inline-flex items-center gap-2 whitespace-nowrap">Upload &amp; Save</span>
                         <span wire:loading.inline-flex wire:target="uploadCustomIcon" class="items-center justify-center gap-2 whitespace-nowrap" style="display: none;">
                             <svg class="animate-spin h-3.5 w-3.5 text-current shrink-0" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -301,10 +367,11 @@
                     </button>
                 </div>
 
+                <!-- Custom Saved Library Grid -->
                 <div>
                     <div class="flex items-center justify-between mb-3">
                         <h4 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-white">Saved Custom Library (<span x-text="customIcons.length"></span>)</h4>
-                        <span class="text-[10px] text-slate-400">Hover icon to delete permanently.</span>
+                        <span class="text-[10px] text-slate-400">Click to select icon. Hover to delete permanently.</span>
                     </div>
 
                     <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
@@ -316,7 +383,7 @@
                                     
                                     <div class="w-8 h-8 flex items-center justify-center mb-1.5 transition-transform group-hover:scale-115">
                                         <template x-if="icon.is_raw_svg && icon.raw_svg">
-                                            <div class="w-6 h-6 shrink-0 fill-current" x-html="icon.raw_svg"></div>
+                                            <div class="w-6 h-6 shrink-0 fill-current text-slate-800 dark:text-cyan-400 [&>svg]:w-full [&>svg]:h-full [&>svg]:max-w-full [&>svg]:max-h-full flex items-center justify-center" x-html="icon.raw_svg"></div>
                                         </template>
                                         <template x-if="!icon.is_raw_svg && icon.url">
                                             <img :src="icon.url" :alt="icon.name" class="w-7 h-7 object-contain" />
@@ -345,39 +412,137 @@
                 </div>
             </div>
 
-            <!-- TAB 3: PASTE RAW SVG -->
+            <!-- TAB 3: PASTE RAW SVG (WITH LIVE DUAL-SURFACE PREVIEW) -->
             <div x-show="activeTab === 'raw_svg'" class="flex-1 overflow-y-auto p-6 space-y-5 max-h-[65vh]" style="display: none;">
+                
                 <div class="p-5 rounded-3xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4">
-                    <div>
-                        <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Paste Raw Vector SVG Code</h4>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Copy any SVG from Figma or icon sites and paste directly.</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Vector Name</label>
-                        <input type="text" 
-                               wire:model="modalCustomIconTitle" 
-                               placeholder="e.g. Custom Nordroy Symbol" 
-                               class="w-full sm:w-80 px-3 py-2 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Raw SVG Markup (&lt;svg&gt;...&lt;/svg&gt;)</label>
-                        <textarea wire:model="modalRawSvgCode" 
-                                  rows="6" 
-                                  placeholder="<svg viewBox='0 0 24 24'> ... </svg>" 
-                                  class="w-full px-3 py-2 text-xs font-mono rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]"></textarea>
-                        @error('modalRawSvgCode') <span class="text-rose-500 text-xs block mt-1">{{ $message }}</span> @enderror
-                    </div>
-
-                    <div class="flex justify-end pt-2">
+                    
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">Paste Raw Vector SVG Code</h4>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Paste SVG markup from Figma, Heroicons, or Lucide and preview in real time.</p>
+                        </div>
                         <button type="button" 
-                                wire:click="saveRawSvgIcon"
-                                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm cursor-pointer">
-                            Store Vector & Use Icon
+                                @click="pasteFromClipboard()"
+                                class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                            <span>Paste from Clipboard</span>
                         </button>
                     </div>
+
+                    <!-- Input & Preview Grid -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 pt-1">
+                        
+                        <!-- Left: Inputs (7 cols) -->
+                        <div class="lg:col-span-7 space-y-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Vector Icon Name</label>
+                                <input type="text" 
+                                       wire:model="modalCustomIconTitle" 
+                                       placeholder="e.g. Marine Radar Symbol" 
+                                       class="w-full px-3 py-2 text-xs rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]" />
+                                @error('modalCustomIconTitle') <span class="text-rose-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+                                        Raw SVG Markup (&lt;svg&gt;...&lt;/svg&gt;)
+                                    </label>
+                                    <span class="text-[10px] font-mono text-slate-400" x-text="rawSvgInput.length + ' chars'"></span>
+                                </div>
+                                <textarea x-model="rawSvgInput" 
+                                          @input="$wire.set('modalRawSvgCode', rawSvgInput)"
+                                          rows="6" 
+                                          placeholder="<svg viewBox='0 0 24 24' fill='currentColor'> ... </svg>" 
+                                          class="w-full px-3 py-2 text-xs font-mono rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#003C58]"></textarea>
+                                @error('modalRawSvgCode') <span class="text-rose-500 text-xs block mt-1">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <!-- Right: LIVE DUAL-SURFACE PREVIEW HUD (5 cols) -->
+                        <div class="lg:col-span-5 flex flex-col justify-between p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                            <div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Live Icon Preview</span>
+                                    <template x-if="isSvgValid">
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Valid Vector
+                                        </span>
+                                    </template>
+                                    <template x-if="!isSvgValid && rawSvgInput.length > 0">
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                                            Incomplete SVG
+                                        </span>
+                                    </template>
+                                </div>
+
+                                <!-- Dual Preview Swatches -->
+                                <div class="grid grid-cols-2 gap-3">
+                                    
+                                    <!-- Light Surface Swatch -->
+                                    <div class="p-3 rounded-xl bg-slate-100 border border-slate-200 text-center space-y-1.5">
+                                        <span class="text-[10px] font-mono font-semibold text-slate-500 uppercase block">Light Theme</span>
+                                        <div class="h-16 w-full rounded-lg bg-white border border-slate-200/80 flex items-center justify-center p-2 shadow-2xs">
+                                            <template x-if="isSvgValid">
+                                                <div class="w-8 h-8 flex items-center justify-center text-[#003C58] fill-current stroke-current [&>svg]:w-full [&>svg]:h-full [&>svg]:max-w-full [&>svg]:max-h-full" 
+                                                     x-html="sanitizedSvgPreview"></div>
+                                            </template>
+                                            <template x-if="!isSvgValid">
+                                                <span class="text-[10px] text-slate-300 font-mono">No Preview</span>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                    <!-- Dark Surface Swatch -->
+                                    <div class="p-3 rounded-xl bg-[#06121d] border border-slate-800 text-center space-y-1.5">
+                                        <span class="text-[10px] font-mono font-semibold text-slate-400 uppercase block">Dark Theme</span>
+                                        <div class="h-16 w-full rounded-lg bg-[#0b1b2b] border border-slate-700/60 flex items-center justify-center p-2 shadow-inner">
+                                            <template x-if="isSvgValid">
+                                                <div class="w-8 h-8 flex items-center justify-center text-cyan-400 fill-current stroke-current [&>svg]:w-full [&>svg]:h-full [&>svg]:max-w-full [&>svg]:max-h-full" 
+                                                     x-html="sanitizedSvgPreview"></div>
+                                            </template>
+                                            <template x-if="!isSvgValid">
+                                                <span class="text-[10px] text-slate-600 font-mono">No Preview</span>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <p class="text-[10px] text-slate-400 leading-tight">
+                                SVGs automatically inherit brand colors and adjust to light/dark mode seamlessly.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Footer Action -->
+                    <div class="flex items-center justify-between pt-3 border-t border-slate-200 dark:border-slate-800">
+                        <span class="text-[11px] text-slate-400" x-show="isSvgValid">Ready to store in persistent vector database.</span>
+                        <span class="text-[11px] text-amber-500" x-show="!isSvgValid && rawSvgInput.length > 0">Please paste a complete &lt;svg&gt;...&lt;/svg&gt; block.</span>
+                        <span class="text-[11px] text-slate-400" x-show="rawSvgInput.length === 0"></span>
+
+                        <button type="button" 
+                                wire:click="saveRawSvgIcon(targetField, targetIndex, targetTypeField)"
+                                wire:loading.attr="disabled"
+                                :disabled="!isSvgValid"
+                                class="px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#003C58] text-white hover:bg-[#024a6d] dark:bg-cyan-500 dark:text-slate-950 shadow-sm transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
+                            <span wire:loading.remove wire:target="saveRawSvgIcon" class="inline-flex items-center gap-2 whitespace-nowrap">Store Vector &amp; Use Icon</span>
+                            <span wire:loading.inline-flex wire:target="saveRawSvgIcon" class="items-center justify-center gap-2 whitespace-nowrap" style="display: none;">
+                                <svg class="animate-spin h-3.5 w-3.5 text-current shrink-0" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                <span>Processing Vector...</span>
+                            </span>
+                        </button>
+                    </div>
+
                 </div>
+
             </div>
 
             <!-- Footer -->

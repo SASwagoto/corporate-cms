@@ -51,20 +51,60 @@ class IconRegistry
     {
         try {
             return CustomIcon::latest()->get()->map(function ($icon) {
-                $isSvg = $icon->type === 'svg';
-                $path = $isSvg ? "raw_svg:{$icon->id}" : ($icon->file_path ?: "custom_icon:{$icon->id}");
+                $hasSvg = !empty($icon->svg_code);
+                $isSvg = $icon->type === 'svg' || $hasSvg;
+                $path = $hasSvg ? "raw_svg:{$icon->id}" : ($icon->file_path ?: "custom_icon:{$icon->id}");
 
                 return [
                     'id'         => $icon->id,
                     'path'       => $path,
                     'is_raw_svg' => $isSvg,
-                    'raw_svg'    => $isSvg ? $icon->svg_code : null,
+                    'raw_svg'    => $hasSvg ? static::cleanSvgMarkup($icon->svg_code, 'w-6 h-6') : null,
                     'name'       => $icon->title,
                     'url'        => $icon->url,
                 ];
             })->toArray();
         } catch (\Throwable $e) {
             return [];
+        }
+    }
+
+    /**
+     * Sanitize and format SVG markup to be responsive and support currentColor.
+     */
+    public static function cleanSvgMarkup(string $rawSvg, string $class = 'w-4 h-4'): string
+    {
+        $svg = trim($rawSvg);
+
+        // Security: remove scripts
+        $svg = preg_replace('/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/i', '', $svg);
+
+        // Ensure viewBox exists if width and height are given
+        if (!str_contains($svg, 'viewBox') && preg_match('/width=["\']([0-9.]+)["\']\s+height=["\']([0-9.]+)["\']/', $svg, $m)) {
+            $svg = preg_replace('/<svg/i', '<svg viewBox="0 0 ' . $m[1] . ' ' . $m[2] . '"', $svg, 1);
+        }
+
+        // Remove fixed width and height attributes so Tailwind class controls dimensions
+        $svg = preg_replace('/\s*(width|height)=["\'][^"\']*["\']/i', '', $svg);
+
+        // Inject Tailwind styling and currentColor support
+        if (preg_match('/<svg[^>]*class=["\']([^"\']*)["\']/i', $svg, $matches)) {
+            $existingClass = $matches[1];
+            $svg = preg_replace('/class=["\'][^"\']*["\']/i', 'class="' . $class . ' shrink-0 inline-block fill-current ' . $existingClass . '"', $svg, 1);
+        } else {
+            $svg = preg_replace('/<svg/i', '<svg class="' . $class . ' shrink-0 inline-block fill-current"', $svg, 1);
+        }
+
+        return $svg;
+    }
+
+    public static function flushCache(?int $iconId = null): void
+    {
+        static::$runtimeRenderCache = [];
+        if ($iconId) {
+            foreach (['w-3.5 h-3.5', 'w-4 h-4', 'w-5 h-5', 'w-6 h-6', 'w-7 h-7', 'w-8 h-8'] as $cls) {
+                Cache::forget("custom_svg_render_{$iconId}_{$cls}");
+            }
         }
     }
 
@@ -89,8 +129,7 @@ class IconRegistry
             return Cache::rememberForever("custom_svg_render_{$iconId}_{$class}", function () use ($iconId, $class) {
                 $icon = CustomIcon::find($iconId);
                 if ($icon && !empty($icon->svg_code)) {
-                    $svg = preg_replace('/(width|height)="[^"]*"/', '', $icon->svg_code);
-                    return preg_replace('/<svg/', '<svg class="' . $class . ' shrink-0 inline-block fill-current"', $svg, 1);
+                    return static::cleanSvgMarkup($icon->svg_code, $class);
                 }
 
                 // Fallback check legacy media_assets
@@ -99,8 +138,7 @@ class IconRegistry
                     $cap = $legacyAsset->caption;
                     $raw = is_array($cap) ? ($cap['en'] ?? array_values($cap)[0] ?? '') : $cap;
                     if (is_string($raw) && str_contains($raw, '<svg')) {
-                        $svg = preg_replace('/(width|height)="[^"]*"/', '', $raw);
-                        return preg_replace('/<svg/', '<svg class="' . $class . ' shrink-0 inline-block fill-current"', $svg, 1);
+                        return static::cleanSvgMarkup($raw, $class);
                     }
                 }
 
@@ -112,8 +150,13 @@ class IconRegistry
         if (str_starts_with($iconKey, 'custom_icon:')) {
             $iconId = (int) str_replace('custom_icon:', '', $iconKey);
             $icon = CustomIcon::find($iconId);
-            if ($icon && $icon->url) {
-                return '<img src="' . htmlspecialchars($icon->url, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($icon->title, ENT_QUOTES, 'UTF-8') . '" class="' . $class . ' object-contain inline-block shrink-0" />';
+            if ($icon) {
+                if (!empty($icon->svg_code)) {
+                    return static::cleanSvgMarkup($icon->svg_code, $class);
+                }
+                if ($icon->url) {
+                    return '<img src="' . htmlspecialchars($icon->url, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($icon->title, ENT_QUOTES, 'UTF-8') . '" class="' . $class . ' object-contain inline-block shrink-0" />';
+                }
             }
         }
 

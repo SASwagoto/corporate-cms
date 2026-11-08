@@ -215,13 +215,17 @@ class SettingsManager extends Component
     }
 
     /**
-     * Upload custom file (PNG/SVG/WebP) directly into dedicated CustomIcon database & storage.
+     * Upload custom file (PNG/SVG/WebP/JPG/ICO) directly into dedicated CustomIcon database & storage.
      */
-    public function uploadCustomIcon(): void
+    public function uploadCustomIcon(?string $targetField = null, ?int $targetIndex = null, ?string $targetTypeField = null): void
     {
         $this->validate([
-            'modalUploadedFile'    => 'required|file|max:3072',
+            'modalUploadedFile'    => 'required|file|max:5120',
             'modalCustomIconTitle' => 'nullable|string|max:50',
+        ], [
+            'modalUploadedFile.required' => 'Please select an image or vector icon file first.',
+            'modalUploadedFile.file'     => 'The selected file is not a valid upload.',
+            'modalUploadedFile.max'      => 'The icon file size must not exceed 5MB.',
         ]);
 
         $ext = strtolower($this->modalUploadedFile->getClientOriginalExtension());
@@ -237,8 +241,8 @@ class SettingsManager extends Component
 
         $count = CustomIcon::count();
         if (!empty(trim($this->modalCustomIconTitle))) {
-            $baseName = Str::slug($this->modalCustomIconTitle);
             $readableTitle = trim($this->modalCustomIconTitle);
+            $baseName = Str::slug($readableTitle);
         } else {
             $original = Str::slug(pathinfo($this->modalUploadedFile->getClientOriginalName(), PATHINFO_FILENAME));
             $baseName = !empty($original) ? $original : 'icon_' . ($count + 1);
@@ -255,21 +259,34 @@ class SettingsManager extends Component
         $this->modalUploadedFile->storeAs('custom-icons', $cleanFileName, 'public');
         $storedPath = 'storage/custom-icons/' . $cleanFileName;
 
+        // If SVG file, read raw content for crisp vector scaling
+        $rawSvg = null;
+        $isSvg = ($ext === 'svg');
+        if ($isSvg) {
+            $fullPath = storage_path('app/public/custom-icons/' . $cleanFileName);
+            if (File::exists($fullPath)) {
+                $rawSvg = File::get($fullPath);
+            }
+        }
+
         $icon = CustomIcon::create([
             'title'      => $readableTitle,
-            'type'       => 'file',
+            'type'       => $isSvg ? 'svg' : 'file',
             'file_path'  => $storedPath,
             'file_name'  => $cleanFileName,
+            'svg_code'   => $rawSvg,
             'created_by' => auth()->id(),
         ]);
 
-        // Dynamically assign to target field
-        if ($this->modalTargetField === 'socialLinks' && $this->modalTargetIndex !== null && isset($this->socialLinks[$this->modalTargetIndex])) {
-            $this->socialLinks[$this->modalTargetIndex]['icon'] = $storedPath;
-            $this->socialLinks[$this->modalTargetIndex]['icon_type'] = 'upload';
-            $this->socialLinks[$this->modalTargetIndex]['custom_path'] = $storedPath;
-        } elseif ($this->modalTargetField && array_key_exists($this->modalTargetField, $this->settings)) {
-            $this->settings[$this->modalTargetField] = $storedPath;
+        $storedKey = $isSvg ? "raw_svg:{$icon->id}" : $storedPath;
+
+        // Atomic assignment to target field
+        $field = $targetField ?: $this->modalTargetField;
+        $index = $targetIndex ?? $this->modalTargetIndex;
+        $typeField = $targetTypeField;
+
+        if ($field) {
+            $this->selectIconAsset($field, $index, $storedKey, $typeField);
         }
 
         $this->modalUploadedFile = null;
@@ -277,29 +294,34 @@ class SettingsManager extends Component
 
         $this->dispatch('custom-icon-saved', 
             iconId: $icon->id, 
-            iconPath: $storedPath, 
-            iconUrl: asset($storedPath),
+            iconPath: $storedKey, 
+            iconUrl: $isSvg ? null : asset($storedPath),
             iconName: $readableTitle,
-            isRawSvg: false,
-            rawSvg: null
+            isRawSvg: $isSvg,
+            rawSvg: $isSvg ? \App\Services\IconRegistry::cleanSvgMarkup($rawSvg, 'w-6 h-6') : null
         );
 
-        session()->flash('message', "Custom Icon '{$readableTitle}' successfully saved to library!");
+        \App\Services\IconRegistry::flushCache($icon->id);
+
+        session()->flash('message', "Custom Icon '{$readableTitle}' successfully saved and applied!");
     }
 
     /**
      * Store Raw SVG Code directly without JSON array conflicts.
      */
-    public function saveRawSvgIcon(): void
+    public function saveRawSvgIcon(?string $targetField = null, ?int $targetIndex = null, ?string $targetTypeField = null): void
     {
         $this->validate([
             'modalRawSvgCode'      => 'required|string|min:20',
             'modalCustomIconTitle' => 'nullable|string|max:50',
+        ], [
+            'modalRawSvgCode.required' => 'Please paste valid <svg>...</svg> code into the box.',
+            'modalRawSvgCode.min'      => 'The pasted SVG code is too short to be valid.',
         ]);
 
         $rawSvg = trim($this->modalRawSvgCode);
         if (!str_contains($rawSvg, '<svg') || !str_contains($rawSvg, '</svg>')) {
-            $this->addError('modalRawSvgCode', 'Please paste valid <svg>...</svg> code.');
+            $this->addError('modalRawSvgCode', 'Invalid vector format: code must include both <svg> and </svg> tags.');
             return;
         }
 
@@ -318,12 +340,13 @@ class SettingsManager extends Component
 
         $targetIconKey = "raw_svg:{$icon->id}";
 
-        if ($this->modalTargetField === 'socialLinks' && $this->modalTargetIndex !== null && isset($this->socialLinks[$this->modalTargetIndex])) {
-            $this->socialLinks[$this->modalTargetIndex]['icon'] = $targetIconKey;
-            $this->socialLinks[$this->modalTargetIndex]['icon_type'] = 'library';
-            $this->socialLinks[$this->modalTargetIndex]['custom_path'] = null;
-        } elseif ($this->modalTargetField && array_key_exists($this->modalTargetField, $this->settings)) {
-            $this->settings[$this->modalTargetField] = $targetIconKey;
+        // Atomic assignment to target field
+        $field = $targetField ?: $this->modalTargetField;
+        $index = $targetIndex ?? $this->modalTargetIndex;
+        $typeField = $targetTypeField;
+
+        if ($field) {
+            $this->selectIconAsset($field, $index, $targetIconKey, $typeField);
         }
 
         $this->modalRawSvgCode = '';
@@ -335,10 +358,12 @@ class SettingsManager extends Component
             iconUrl: null,
             iconName: $readableTitle,
             isRawSvg: true,
-            rawSvg: $rawSvg
+            rawSvg: \App\Services\IconRegistry::cleanSvgMarkup($rawSvg, 'w-6 h-6')
         );
 
-        session()->flash('message', "Raw SVG Vector '{$readableTitle}' permanently stored in library!");
+        \App\Services\IconRegistry::flushCache($icon->id);
+
+        session()->flash('message', "Raw SVG Vector '{$readableTitle}' stored and applied!");
     }
 
     public function deleteCustomIcon($assetIdOrPath): void
@@ -367,7 +392,7 @@ class SettingsManager extends Component
         }
 
         // Flush svg render caches
-        Cache::forget("custom_svg_render_{$deletedId}_w-4 h-4");
+        \App\Services\IconRegistry::flushCache(is_numeric($deletedId) ? (int)$deletedId : null);
 
         $this->dispatch('custom-icon-deleted', iconId: $deletedId, iconPath: $assetIdOrPath);
         session()->flash('message', 'Custom icon successfully deleted.');
