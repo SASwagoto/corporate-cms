@@ -14,13 +14,16 @@
         $metaDescription = \App\Models\Setting::get('seo_meta_description', 'Authorized multi-brand marine turbocharger overhauls, high-speed dynamic balancing, cartridge reconditioning, and 24/7 port emergency flying squads in Bangladesh.');
         $metaKeywords = \App\Models\Setting::get('seo_meta_keywords', 'marine turbocharger, dynamic balancing, turbocharger overhaul, chittagong port, maritime engineering, cartridge rebuilding, nordroy');
         
+        // Brand Logos: Separate Light & Dark Mode variants with robust fallback
+        $siteLogoLight = \App\Models\Setting::get('site_logo', 'assets/images/logo.png');
+        $siteLogoDark = \App\Models\Setting::get('site_logo_dark') ?: $siteLogoLight;
+
         // Open Graph Image: Custom OG image from Settings > Fallback to official site logo (assets/images/logo.png)
         $customOgImage = \App\Models\Setting::get('seo_og_image');
         if (!empty($customOgImage)) {
             $ogImageUrl = str_starts_with($customOgImage, 'http') ? $customOgImage : url(asset($customOgImage));
         } else {
-            $siteLogo = \App\Models\Setting::get('site_logo', 'assets/images/logo.png');
-            $ogImageUrl = str_starts_with($siteLogo, 'http') ? $siteLogo : url(asset($siteLogo));
+            $ogImageUrl = str_starts_with($siteLogoLight, 'http') ? $siteLogoLight : url(asset($siteLogoLight));
         }
 
         $canonicalUrl = url()->current();
@@ -314,11 +317,16 @@
         <header class="sticky top-0 z-40 glass-nav border-b border-slate-200/90 dark:border-slate-800 transition-colors duration-200">
             <div class="max-w-[1536px] mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
                 
-                <!-- Brand Logo & Title -->
+                <!-- Brand Logo & Title (Light & Dark Mode Responsive Pairing) -->
                 <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                    <img src="{{ asset(\App\Models\Setting::get('site_logo', 'assets/images/logo.png')) }}" 
+                    <!-- Light Mode Logo: Visible in Light Mode, hidden in Dark Mode -->
+                    <img src="{{ asset($siteLogoLight) }}" 
                          alt="{{ \App\Models\Setting::get('site_name', 'Nordroy Marine') }}" 
-                         class="h-10 w-auto object-contain dark:brightness-110 group-hover:scale-102 transition-transform duration-200" />
+                         class="h-10 w-auto object-contain dark:hidden group-hover:scale-102 transition-transform duration-200" />
+                    <!-- Dark Mode Logo: Visible in Dark Mode, hidden in Light Mode -->
+                    <img src="{{ asset($siteLogoDark) }}" 
+                         alt="{{ \App\Models\Setting::get('site_name', 'Nordroy Marine') }}" 
+                         class="h-10 w-auto object-contain hidden dark:block group-hover:scale-102 transition-transform duration-200" />
                 </a>
 
                 <!-- DESKTOP MULTI-LAYER NAVIGATION LINKS WITH CLEAN SUBMENUS (Consistent Title Case) -->
@@ -511,9 +519,14 @@
                     
                     <!-- Drawer Header -->
                     <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                        <img src="{{ asset(\App\Models\Setting::get('site_logo', 'assets/images/logo.png')) }}" 
+                        <!-- Light Mode Logo: Visible in Light Mode, hidden in Dark Mode -->
+                        <img src="{{ asset($siteLogoLight) }}" 
                              alt="{{ \App\Models\Setting::get('site_name', 'Nordroy Marine') }}" 
-                             class="h-8 w-auto object-contain dark:brightness-110" />
+                             class="h-8 w-auto object-contain dark:hidden" />
+                        <!-- Dark Mode Logo: Visible in Dark Mode, hidden in Light Mode -->
+                        <img src="{{ asset($siteLogoDark) }}" 
+                             alt="{{ \App\Models\Setting::get('site_name', 'Nordroy Marine') }}" 
+                             class="h-8 w-auto object-contain hidden dark:block" />
                         <div class="flex items-center gap-2">
                             <button type="button" onclick="window.toggleSiteTheme(event)"
                                     class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900 text-slate-700 dark:text-amber-400 cursor-pointer"
@@ -626,9 +639,14 @@
                     
                     <!-- Col 1: Brand Info & Mission (2 cols on lg) -->
                     <div class="lg:col-span-2 space-y-4">
-                        <img src="{{ asset(\App\Models\Setting::get('site_logo', 'assets/images/logo.png')) }}" 
+                        <!-- Light Mode Logo: Visible in Light Mode, hidden in Dark Mode -->
+                        <img src="{{ asset($siteLogoLight) }}" 
                              alt="{{ \App\Models\Setting::get('site_name', 'Nordroy Marine') }}" 
-                             class="h-10 w-auto object-contain dark:brightness-110" />
+                             class="h-10 w-auto object-contain dark:hidden" />
+                        <!-- Dark Mode Logo: Visible in Dark Mode, hidden in Light Mode -->
+                        <img src="{{ asset($siteLogoDark) }}" 
+                             alt="{{ \App\Models\Setting::get('site_name', 'Nordroy Marine') }}" 
+                             class="h-10 w-auto object-contain hidden dark:block" />
                         
                         <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-md">
                             A premier industrial conglomerate and maritime engineering group specializing in authorized multi-brand exhaust gas turbocharger overhauls, dynamic rotor balancing up to 100,000 RPM, genuine OEM spare parts supply, and technical port assistance across global maritime hubs.

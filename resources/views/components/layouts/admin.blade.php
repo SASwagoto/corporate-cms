@@ -66,6 +66,11 @@
           }
       }">
 
+    @php
+        $siteLogoLight = \App\Models\Setting::get('site_logo', 'assets/images/logo.png');
+        $siteLogoDark = \App\Models\Setting::get('site_logo_dark') ?: $siteLogoLight;
+    @endphp
+
     <!-- ==================== NORDROY PRELOADER ==================== -->
     <div id="nordroy-preloader" 
          x-data="{ isLoading: true }" 
@@ -105,9 +110,12 @@
             
             <div class="h-20 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
-                    <img src="{{ asset(\App\Models\Setting::get('site_logo', 'assets/images/logo.png')) }}" 
+                    <img src="{{ asset($siteLogoLight) }}" 
                          alt="{{ \App\Models\Setting::get('site_name', 'Nordroy CMS') }}" 
-                         class="h-9 w-auto object-contain dark:brightness-110" />
+                         class="h-9 w-auto object-contain dark:hidden" />
+                    <img src="{{ asset($siteLogoDark) }}" 
+                         alt="{{ \App\Models\Setting::get('site_name', 'Nordroy CMS') }}" 
+                         class="h-9 w-auto object-contain hidden dark:block" />
                 </a>
                 <button @click="mobileSidebarOpen = false" class="p-2 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -149,9 +157,12 @@
             
             <div class="h-20 flex items-center px-6 border-b border-slate-200 dark:border-slate-800">
                 <a href="{{ route('admin.dashboard') }}" wire:navigate class="flex items-center gap-3 group">
-                    <img src="{{ asset(\App\Models\Setting::get('site_logo', 'assets/images/logo.png')) }}" 
+                    <img src="{{ asset($siteLogoLight) }}" 
                          alt="{{ \App\Models\Setting::get('site_name', 'Nordroy CMS') }}" 
-                         class="h-9 w-auto max-w-[200px] object-contain dark:brightness-110 group-hover:opacity-90 transition-opacity" />
+                         class="h-9 w-auto max-w-[200px] object-contain dark:hidden group-hover:opacity-90 transition-opacity" />
+                    <img src="{{ asset($siteLogoDark) }}" 
+                         alt="{{ \App\Models\Setting::get('site_name', 'Nordroy CMS') }}" 
+                         class="h-9 w-auto max-w-[200px] object-contain hidden dark:block group-hover:opacity-90 transition-opacity" />
                 </a>
             </div>
 

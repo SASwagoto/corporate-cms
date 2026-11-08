@@ -28,9 +28,16 @@ new #[Layout('components.layouts.empty')] class extends Component
         <!-- Official Nordroy Brand Header -->
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center mb-3">
-                <img src="{{ asset(\App\Models\Setting::get('site_logo', 'assets/images/logo.png')) }}" 
+                @php
+                    $siteLogoLight = \App\Models\Setting::get('site_logo', 'assets/images/logo.png');
+                    $siteLogoDark = \App\Models\Setting::get('site_logo_dark') ?: $siteLogoLight;
+                @endphp
+                <img src="{{ asset($siteLogoLight) }}" 
                      alt="{{ \App\Models\Setting::get('site_name', 'Nordroy CMS') }}" 
-                     class="h-12 w-auto object-contain dark:brightness-110" />
+                     class="h-12 w-auto object-contain dark:hidden" />
+                <img src="{{ asset($siteLogoDark) }}" 
+                     alt="{{ \App\Models\Setting::get('site_name', 'Nordroy CMS') }}" 
+                     class="h-12 w-auto object-contain hidden dark:block" />
             </div>
             <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Enterprise Management Platform</p>
         </div>

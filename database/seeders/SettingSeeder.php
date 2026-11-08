@@ -14,6 +14,7 @@ class SettingSeeder extends Seeder
             ['group' => 'general', 'key' => 'site_name', 'value' => 'Nordroy CMS', 'type' => 'text'],
             ['group' => 'general', 'key' => 'site_tagline', 'value' => 'Marine & Power Platform', 'type' => 'text'],
             ['group' => 'general', 'key' => 'site_logo', 'value' => 'assets/images/logo.png', 'type' => 'text'],
+            ['group' => 'general', 'key' => 'site_logo_dark', 'value' => 'assets/images/logo-dark.png', 'type' => 'text'],
             ['group' => 'general', 'key' => 'site_icon', 'value' => 'assets/images/icon.png', 'type' => 'text'],
             
             // Login & Portal Info
