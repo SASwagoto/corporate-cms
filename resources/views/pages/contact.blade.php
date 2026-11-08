@@ -56,48 +56,7 @@
                             <h3 class="text-2xl font-bold font-heading text-slate-900 dark:text-white">Request Quotation / Port Squad</h3>
                         </div>
 
-                        <form action="#" method="POST" class="space-y-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Vessel or Plant Name</label>
-                                    <input type="text" placeholder="e.g. M/V Nordroy Carrier" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Turbocharger Model</label>
-                                    <input type="text" placeholder="e.g. ABB TPL-77 or MAN TCR22" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Port Location</label>
-                                    <input type="text" placeholder="Chattogram Port / Mongla / Other" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Urgency</label>
-                                    <select class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none">
-                                        <option>Standard Planned Maintenance</option>
-                                        <option>Urgent Port Turnaround (< 48h)</option>
-                                        <option>Vessel Blackout Emergency</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Contact Email &amp; Phone</label>
-                                <input type="text" placeholder="ops@shipping.com / +880 1800-000000" class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none" />
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Work Scope &amp; Symptoms</label>
-                                <textarea rows="3" placeholder="Provide details of required overhaul, vibration measurements, or parts needed..." class="w-full px-4 py-2.5 rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-[#003C58]/40 focus:outline-none"></textarea>
-                            </div>
-
-                            <button type="button" class="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white shadow-md active:scale-95 transition-all"
-                                    style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color));">
-                                Transmit RFQ to 24/7 Port Duty Desk
-                            </button>
-                        </form>
+                        <livewire:frontend.rfq-lead-form />
                     </div>
                 </div>
 

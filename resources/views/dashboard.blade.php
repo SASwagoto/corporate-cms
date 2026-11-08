@@ -58,16 +58,28 @@
             </div>
 
             <!-- 4. RFQ / Enquiries -->
-            <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+            @php
+                $dashNewEnquiryCount = \App\Models\Enquiry::where('status', 'new')->count();
+            @endphp
+            <a href="{{ route('admin.enquiries') }}" wire:navigate class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-[#003C58]/40 dark:hover:border-cyan-500/40 transition-all group block">
                 <div class="flex items-center justify-between text-slate-400">
-                    <span class="text-xs font-semibold uppercase tracking-wider">Inquiries & Leads</span>
-                    <svg class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
+                    <span class="text-xs font-semibold uppercase tracking-wider group-hover:text-[#003C58] dark:group-hover:text-cyan-400 transition-colors">Inquiries &amp; Leads</span>
+                    @if ($dashNewEnquiryCount > 0)
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white animate-pulse">
+                            {{ $dashNewEnquiryCount }} NEW
+                        </span>
+                    @else
+                        <svg class="w-5 h-5 text-slate-400 group-hover:text-[#003C58] dark:group-hover:text-cyan-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    @endif
                 </div>
                 <div class="text-3xl font-extrabold text-slate-900 dark:text-white mt-3">{{ \App\Models\Enquiry::count() }}</div>
-                <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">Pending client responses</div>
-            </div>
+                <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 flex items-center justify-between">
+                    <span>Pending client responses</span>
+                    <span class="text-[#003C58] dark:text-cyan-400 font-semibold group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                </div>
+            </a>
         </div>
 
         <!-- Two Columns Work Surface -->

@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Admin\Access\AccessManager;
+use App\Livewire\Admin\Enquiries\EnquiryManager;
 use App\Livewire\Admin\Media\MediaManager;
 use App\Livewire\Admin\Settings\SettingsManager;
 use App\Livewire\Admin\Theme\ThemeStudio;
@@ -208,6 +209,11 @@ Route::middleware([
     Route::get('/settings', SettingsManager::class)
         ->middleware('permission:settings.manage')
         ->name('settings');
+
+    // Inquiries & RFQ Duty Desk
+    Route::get('/enquiries', EnquiryManager::class)
+        ->middleware('permission:enquiries.view')
+        ->name('enquiries');
 
     // Access Control Studio (Users & Permissions)
     Route::get('/access', AccessManager::class)
