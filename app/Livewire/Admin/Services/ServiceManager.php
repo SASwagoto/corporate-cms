@@ -62,6 +62,7 @@ class ServiceManager extends Component
     // Media Picker Modal State
     public $uploads = [];
     public string $uploadFolder = 'services';
+    public bool $autoCompress = true;
 
     public function updatingSearch(): void
     {
@@ -481,49 +482,54 @@ class ServiceManager extends Component
         $this->featured_image_url = null;
     }
 
-    public function processUploads(?string $targetField = null, ?int $targetIndex = null): void
+    public function uploadFiles(?string $targetField = null, ?int $targetIndex = null): void
     {
-        $this->validate([
-            'uploads.*' => 'required|file|max:10240',
-        ]);
+        if (empty($this->uploads) || !is_array($this->uploads)) {
+            $this->addError('uploads', 'Please select at least one file to upload.');
+            return;
+        }
 
-        $successCount = 0;
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'svg', 'pdf', 'gif', 'ico'];
+        $service = app(\App\Services\MediaStorageService::class);
         $lastAsset = null;
+        $successCount = 0;
 
         foreach ($this->uploads as $file) {
-            $originalName = $file->getClientOriginalName();
-            $mimeType = $file->getMimeType();
-            $fileSize = $file->getSize();
-            $extension = $file->getClientOriginalExtension();
+            if ($file) {
+                $ext = strtolower($file->getClientOriginalExtension());
+                if (!in_array($ext, $allowedExtensions)) {
+                    continue;
+                }
 
-            $baseName = pathinfo($originalName, PATHINFO_FILENAME);
-            $slugName = Str::slug($baseName);
-            $finalName = $slugName . '-' . time() . '.' . $extension;
+                $folder = $this->uploadFolder ?: 'services';
+                $lastAsset = $service->store($file, $folder, null, $this->autoCompress);
+                $successCount++;
 
-            $folder = $this->uploadFolder ?: 'services';
-            $path = $file->storeAs($folder, $finalName, 'public');
-
-            $asset = MediaAsset::create([
-                'disk'       => 'public',
-                'file_path'  => $path,
-                'file_name'  => $originalName,
-                'mime_type'  => $mimeType,
-                'file_size'  => $fileSize,
-                'folder'     => $folder,
-                'title'      => ['en' => ucwords(str_replace(['-', '_'], ' ', $baseName))],
-                'created_by' => auth()->id(),
-            ]);
-
-            $lastAsset = $asset;
-            $successCount++;
+                $this->dispatch('media-asset-uploaded', [
+                    'id'       => $lastAsset->id,
+                    'name'     => $lastAsset->getTranslation('title', 'en') ?: $lastAsset->file_name,
+                    'url'      => $lastAsset->url,
+                    'is_image' => in_array(strtolower(pathinfo($lastAsset->file_name, PATHINFO_EXTENSION)), ['jpg','jpeg','png','webp','svg','gif','ico']),
+                    'size'     => $lastAsset->human_size,
+                    'folder'   => $lastAsset->folder,
+                ]);
+            }
         }
 
         $this->uploads = [];
 
         if ($successCount > 0 && $lastAsset) {
-            $this->selectAsset($lastAsset->id, $lastAsset->url, $targetField, $targetIndex);
-            session()->flash('message', "{$successCount} asset(s) uploaded and attached.");
+            $field = $targetField ?: $this->modalTargetField;
+            $index = $targetIndex ?? $this->modalTargetIndex;
+            $this->selectAsset($lastAsset->id, $lastAsset->url, $field, $index);
+            session()->flash('message', "{$successCount} asset(s) successfully uploaded and attached.");
+            $this->dispatch('close-media-modal');
         }
+    }
+
+    public function processUploads(?string $targetField = null, ?int $targetIndex = null): void
+    {
+        $this->uploadFiles($targetField, $targetIndex);
     }
 
     public function render()

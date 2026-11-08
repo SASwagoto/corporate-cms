@@ -1,4 +1,5 @@
-<div x-data="nordroyMediaPicker()"
+<div wire:ignore.self
+     x-data="nordroyMediaPicker()"
      @open-media-picker.window="openModal($event.detail)"
      @close-media-modal.window="closeModal()"
      @media-asset-uploaded.window="handleAssetUploaded($event.detail)"

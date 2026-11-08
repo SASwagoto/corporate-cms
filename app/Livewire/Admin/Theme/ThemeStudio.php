@@ -6,15 +6,21 @@ use App\Models\Setting;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 #[Layout('components.layouts.admin')]
 class ThemeStudio extends Component
 {
+    use WithFileUploads;
+
     public string $activeTab = 'colors'; // 'colors', 'typography', 'buttons', 'layout', 'header', 'background'
 
     // Media Modal State
     public ?string $modalTargetField = null;
     public ?int $modalTargetIndex = null;
+    public $uploads = [];
+    public string $uploadFolder = 'branding';
+    public bool $autoCompress = true;
 
     // Full Design Tokens State
     public array $theme = [];
@@ -224,6 +230,7 @@ class ThemeStudio extends Component
         if ($field && array_key_exists($field, $this->theme)) {
             $this->theme[$field] = $assetUrl;
         }
+        $this->dispatch('close-media-modal');
     }
 
     public function selectAsset(int $assetId, string $assetUrl, ?string $targetField = null, ?int $targetIndex = null): void
@@ -231,6 +238,52 @@ class ThemeStudio extends Component
         $field = $targetField ?: $this->modalTargetField;
         if ($field && array_key_exists($field, $this->theme)) {
             $this->theme[$field] = $assetUrl;
+        }
+        $this->dispatch('close-media-modal');
+    }
+
+    public function uploadFiles(?string $targetField = null, ?int $targetIndex = null): void
+    {
+        if (empty($this->uploads) || !is_array($this->uploads)) {
+            $this->addError('uploads', 'Please select at least one file to upload.');
+            return;
+        }
+
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'svg', 'pdf', 'gif', 'ico', 'mp4', 'webm'];
+        $service = app(\App\Services\MediaStorageService::class);
+        $lastAsset = null;
+        $successCount = 0;
+
+        foreach ($this->uploads as $file) {
+            if ($file) {
+                $ext = strtolower($file->getClientOriginalExtension());
+                if (!in_array($ext, $allowedExtensions)) {
+                    continue;
+                }
+
+                $folder = $this->uploadFolder ?: 'branding';
+                $lastAsset = $service->store($file, $folder, null, $this->autoCompress);
+                $successCount++;
+
+                $this->dispatch('media-asset-uploaded', [
+                    'id'       => $lastAsset->id,
+                    'name'     => $lastAsset->getTranslation('title', 'en') ?: $lastAsset->file_name,
+                    'url'      => $lastAsset->url,
+                    'is_image' => in_array(strtolower(pathinfo($lastAsset->file_name, PATHINFO_EXTENSION)), ['jpg','jpeg','png','webp','svg','gif','ico']),
+                    'size'     => $lastAsset->human_size,
+                    'folder'   => $lastAsset->folder,
+                ]);
+            }
+        }
+
+        $this->uploads = [];
+
+        if ($successCount > 0 && $lastAsset) {
+            $field = $targetField ?: $this->modalTargetField;
+            $index = $targetIndex ?? $this->modalTargetIndex;
+            $this->selectAsset($lastAsset->id, $lastAsset->url, $field, $index);
+            session()->flash('message', "{$successCount} asset(s) successfully uploaded and synchronized.");
+            $this->dispatch('close-media-modal');
         }
     }
 
