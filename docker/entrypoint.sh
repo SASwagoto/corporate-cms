@@ -56,9 +56,7 @@ php artisan view:cache
 # Auto-migrate database on start if enabled
 if [ "$AUTO_MIGRATE" = "true" ] || [ "$AUTO_MIGRATE" = "1" ]; then
     echo "Running database migrations..."
-    php artisan migrate --force || echo "Migration notice: please verify database connection credentials."
-    echo "Running database seeders..."
-    php artisan db:seed --force || echo "Seeder notice: database already seeded or connection issue."
+    php artisan migrate --force --isolated || echo "Migration notice: skipped or connection busy."
 fi
 
 echo "All systems ready. Starting Supervisor (Nginx + PHP-FPM)..."
