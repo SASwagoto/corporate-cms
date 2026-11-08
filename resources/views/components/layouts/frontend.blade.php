@@ -20,6 +20,18 @@
         } else {
             document.documentElement.classList.add('dark');
         }
+
+        window.toggleSiteTheme = function() {
+            var isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            window.dispatchEvent(new CustomEvent('theme-changed', { detail: { isDark: !isDark } }));
+        };
     </script>
 
     <!-- Dynamic CSS Design System Tokens from CMS Theme Studio -->
@@ -143,16 +155,13 @@
           activeMobileSubmenu: null,
           isDark: document.documentElement.classList.contains('dark'),
           toggleTheme() {
-              this.isDark = !this.isDark;
-              if (this.isDark) {
-                  document.documentElement.classList.add('dark');
-                  localStorage.setItem('theme', 'dark');
-              } else {
-                  document.documentElement.classList.remove('dark');
-                  localStorage.setItem('theme', 'light');
+              if (window.toggleSiteTheme) {
+                  window.toggleSiteTheme();
               }
+              this.isDark = document.documentElement.classList.contains('dark');
           }
-      }">
+      }"
+      @theme-changed.window="isDark = $event.detail.isDark">
 
     <!-- ==================== FIXED FULL-SITE BACKGROUND VIDEO (Turbo Internacional Style) ==================== -->
     @php
@@ -391,7 +400,7 @@
                 <div class="flex items-center gap-3 sm:gap-4">
                     
                     <!-- Theme Toggle -->
-                    <button type="button" @click="toggleTheme()" 
+                    <button type="button" @click="toggleTheme()" onclick="window.toggleSiteTheme && window.toggleSiteTheme()"
                             class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900 text-slate-700 dark:text-amber-400 hover:bg-slate-200/80 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                             title="Toggle Light/Dark Theme">
                         <svg x-show="!isDark" class="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -450,9 +459,21 @@
                         <img src="{{ asset(\App\Models\Setting::get('site_logo', 'assets/images/logo.png')) }}" 
                              alt="{{ \App\Models\Setting::get('site_name', 'Nordroy Marine') }}" 
                              class="h-8 w-auto object-contain dark:brightness-110" />
-                        <button type="button" @click="mobileNavOpen = false" class="p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button type="button" @click="toggleTheme()" onclick="window.toggleSiteTheme && window.toggleSiteTheme()"
+                                    class="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900 text-slate-700 dark:text-amber-400 cursor-pointer"
+                                    title="Toggle Light/Dark Theme">
+                                <svg x-show="!isDark" class="w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                <svg x-show="isDark" class="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                                </svg>
+                            </button>
+                            <button type="button" @click="mobileNavOpen = false" class="p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Drawer Nav Items (with Accordion Submenus - Pure Title Case) -->

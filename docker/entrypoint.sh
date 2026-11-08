@@ -44,6 +44,7 @@ fi
 rm -f /var/www/html/public/hot
 chmod -R 755 /var/www/html/public
 php artisan storage:link --quiet || true
+php artisan livewire:publish --assets --quiet || true
 
 # Clear previous cache and re-cache with verified APP_KEY
 echo "Caching Laravel configuration, routes, and views..."
